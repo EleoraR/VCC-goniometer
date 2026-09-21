@@ -1,0 +1,49 @@
+:root {
+	--darkblue: #1e4759;
+	--teal: #009f96;
+	--yellow: #f5b672;
+	--orange: #f2896f;
+	--red: #dc5556;
+    --whiteish: #f2f2f2;
+}
+
+.goniometer-container {
+    z-index: 999;
+    top: 20%;
+    left: 20%;
+    position: fixed;
+    background: none;
+    width: 40vw;
+    height: 40vh
+}
+#goniometer-canvas {
+    z-index: 1000;
+    top: 20%;
+    left: 20%;
+    position: fixed;
+    max-width: 40vw;
+    max-height: 40vh;
+    border: 1px solid black;
+}
+
+.goniometer-title {
+    position: relative;
+    color: black;
+    padding: 1rem;
+}
+
+.goniometer-button {
+    z-index: 9999;
+    padding: 0.5rem 1rem;
+    background: white;
+    color: black;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    position: relative;
+
+}
+
+.goniometer-button:hover {
+  color: var(--teal)
+}
