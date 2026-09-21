@@ -41,6 +41,8 @@ export function createElement() {
     buttons.textContent = 'hello';
     buttons.classList.add('goniometer-button');
 
+    
+
     buttons.addEventListener('click', async (e) => {
       const canvas = document.getElementById('goniometer-canvas');
       const ctx = canvas.getContext('2d');
@@ -63,7 +65,8 @@ export function createElement() {
       drawLine(ctx, centerX, centerY, second.x, second.y, 'blue', 2)
 
       var angleDeg = calculateGoniometerAngle(centerX, centerY, first, second);
-      console.log('angle:', angleDeg);
+      drawAngleText(ctx, angleDeg, second.x - 10, second.y - 10);
+
     })
     mainDiv.append(container);
     container.append(gonioMeter);
@@ -95,12 +98,19 @@ export function calculateGoniometerAngle(centerX, centerY, firstPoint, secondPoi
   return angleDeg;
 }
 
+export function drawAngleText(ctx, angle, x, y, fontSize = 16, color = 'black') {
+  ctx.font = `${fontSize}px Arial`;
+  ctx.fillStyle = color;
+  ctx.textAlign = 'center';
+  ctx.textBaseline = 'middle';
+  ctx.fillText(`${angle.toFixed(1)}°`, x, y);
+}
+
 export function drawDot(ctx, x, y, color = 'black', radius = 5) {
   ctx.fillStyle = color;
   ctx.beginPath()
   ctx.arc(x, y, radius, 0, Math.PI * 2);
   ctx.fill();
-
   
 }
 
