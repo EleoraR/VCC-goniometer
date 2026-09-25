@@ -1,4 +1,15 @@
-export function drawDistText(ctx, dist, x, y, fontSize = 16, color = 'black') {
+const CONSTANTS = {
+  CIRCLE_RADIUS: 200,
+  DOT_RADIUS: 5,
+  DRAG_RADIUS: 8,
+  LINE_WIDTH: 2,
+  TEXT_FONT_SIZE: 16,
+  TEXT_COLOR: 'black',
+  LINE_COLOR: 'blue'
+}
+
+
+export function drawDistText(ctx, dist, x, y, fontSize = CONSTANTS.TEXT_FONT_SIZE, color = CONSTANTS.TEXT_COLOR) {
   ctx.font = `${fontSize}px Arial`;
   ctx.fillStyle = color;
   ctx.textAlign = 'center';
@@ -6,7 +17,7 @@ export function drawDistText(ctx, dist, x, y, fontSize = 16, color = 'black') {
   ctx.fillText(`${dist.toFixed(2)}`, x, y);
 }
 
-export function drawAngleText(ctx, angle, x, y, fontSize = 16, color = 'black') {
+export function drawAngleText(ctx, angle, x, y, fontSize = CONSTANTS.TEXT_FONT_SIZE, color = CONSTANTS.TEXT_COLOR) {
   ctx.font = `${fontSize}px Arial`;
   ctx.fillStyle = color;
   ctx.textAlign = 'center';
@@ -14,7 +25,7 @@ export function drawAngleText(ctx, angle, x, y, fontSize = 16, color = 'black') 
   ctx.fillText(`${angle.toFixed(1)}°`, x, y);
 }
 
-export function drawDot(ctx, x, y, color = 'black', radius = 5) {
+export function drawDot(ctx, x, y, color = CONSTANTS.TEXT_COLOR, radius = CONSTANTS.DOT_RADIUS) {
   ctx.fillStyle = color;
   ctx.beginPath()
   ctx.arc(x, y, radius, 0, Math.PI * 2);
@@ -22,7 +33,7 @@ export function drawDot(ctx, x, y, color = 'black', radius = 5) {
   
 }
 
-export function drawLine(ctx, x1, y1, x2, y2, color = 'black', lineWidth = 2) {
+export function drawLine(ctx, x1, y1, x2, y2, color = CONSTANTS.TEXT_COLOR, lineWidth = CONSTANTS.LINE_WIDTH) {
   ctx.strokeStyle = color;
   ctx.lineWidth = lineWidth;
   ctx.beginPath();
@@ -31,7 +42,7 @@ export function drawLine(ctx, x1, y1, x2, y2, color = 'black', lineWidth = 2) {
   ctx.stroke();          
 }
 
-export function drawUnitCircle(ctx, center, radius = 200) {
+export function drawUnitCircle(ctx, center, radius = CONSTANTS.CIRCLE_RADIUS) {
 
   // Draw the circle
   ctx.strokeStyle = 'black';
@@ -63,7 +74,7 @@ export function drawUnitCircle(ctx, center, radius = 200) {
   ctx.stroke();
 
   //labels
-  drawLabels(ctx, center);
+  // drawLabels(ctx, center);
 }
 
 function drawLabels(ctx, center) {

@@ -1,7 +1,7 @@
 import { DRAWER_ID } from "../lib/constants";
 import './styles.css'; 
-import {calculateGoniometerAngle, distBetweenTwoPoints} from './mathUtils.js';
-import {drawUnitCircle, drawLine, drawDot, drawDistText, drawAngleText} from './drawCanvas.js';
+import {calculateGoniometerAngle} from './mathUtils.js';
+import {drawUnitCircle, drawLine, drawDot, drawAngleText} from './drawCanvas.js';
 
 export function clearStyles(id) {
 const el = document.getElementById(id);
@@ -25,6 +25,7 @@ const el = document.getElementById(id);
 
 let selectedPoint = null;
 let points = null;
+let angleDeg = null;
 
 window.addEventListener('mouseup', () => {
   selectedPoint = null;
@@ -35,9 +36,17 @@ export function createElement() {
     const container = document.createElement('div');
     container.classList.add('goniometer-container');
 
-    const gonioMeter = document.createElement('h1');
-    gonioMeter.innerHTML = 'VCC GonioMeter';
+    const gonioMeter = document.createElement('div');
+    const goniometerTitle = document.createElement('h1');
+    const copyButton = document.createElement('button');
+    
+    goniometerTitle.innerHTML = 'VCC GonioMeter';
     gonioMeter.classList.add('goniometer-title');
+    // copyButton.textContent = 'copy';
+    copyButton.classList.add("goniometer-button");
+
+    gonioMeter.append(goniometerTitle);
+    gonioMeter.append(copyButton);
 
     const canvas = document.createElement('canvas');
     canvas.id = "goniometer-canvas";
@@ -45,6 +54,8 @@ export function createElement() {
     canvas.style.height = '400px';
     canvas.width = 400;  
     canvas.height = 400; 
+
+    
    
     mainDiv.append(container);
     container.append(gonioMeter);
@@ -52,7 +63,20 @@ export function createElement() {
 
     activate();
     attachCanvasList(canvas);
+    attackButtonList(copyButton);
     
+}
+
+function attackButtonList(button) {
+  button.addEventListener('click', (e) => {
+    var copyText = `${angleDeg.toFixed(1)}°`;
+    copyToClipboard(copyText);
+  });
+}
+
+function copyToClipboard(text) {
+  navigator.clipboard.writeText(text);
+  alert("Copied to clipboard: " + text);
 }
 
 function attachCanvasList(canvas) {
@@ -83,10 +107,9 @@ export function activate() {
 
   const center = getCenter(canvas);
 
-  drawUnitCircle(ctx, center, 100);
+  drawUnitCircle(ctx, center);
 
   points = initializePoints(canvas);
-  // console.log(points);
 
   draw(ctx, canvas);
 }
@@ -100,7 +123,7 @@ function draw(ctx, canvas) {
   const [first, second] = points;
   
   ctx.clearRect(0, 0, canvas.width, canvas.height);
-  drawUnitCircle(ctx, center, 100);
+  drawUnitCircle(ctx, center);
 
   drawDot(ctx, first.x, first.y);
   drawDot(ctx, second.x, second.y);
@@ -108,14 +131,9 @@ function draw(ctx, canvas) {
   drawLine(ctx, first.x, first.y, center.x, center.y, 'blue', 2)
   drawLine(ctx, center.x, center.y, second.x, second.y, 'blue', 2)
 
-  var angleDeg = calculateGoniometerAngle(center, first, second);
+  angleDeg = calculateGoniometerAngle(center, first, second);
   drawAngleText(ctx, angleDeg, center.x - 10, center.y - 10);
 
-  // var dist = distBetweenTwoPoints(center, first);
-  // drawDistText(ctx, dist, first.x - 10, first.y - 10);
-
-  // var dist2 = distBetweenTwoPoints(center, second);
-  // drawDistText(ctx, dist2, second.x - 10, second.y - 10);
 }
 
 function initializePoints(canvas) {

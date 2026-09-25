@@ -13,35 +13,53 @@
     left: 20%;
     position: fixed;
     background: none;
-    width: 40vw;
-    height: 40vh
+    width: auto;
+    height: auto;
+    /* border: 1px solid black; */
+    background-color: #f2f2f24d;
 }
 #goniometer-canvas {
     z-index: 1000;
-    top: 20%;
-    left: 20%;
+    /* top: 20%;
+    left: 20%; */
     position: fixed;
-    max-width: 40vw;
-    max-height: 40vh;
-    border: 1px solid black;
+    background-color: #f2f2f24d;
 }
 
 .goniometer-title {
     position: relative;
     color: black;
     padding: 1rem;
+    width: 400px;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    /* background-color: #f2f2f24d; */
+
+    h1 {
+        padding: 0.5rem 1rem;
+    }
 }
 
 .goniometer-button {
     z-index: 9999;
     padding: 0.5rem 1rem;
-    background: white;
+    background: none;
     color: black;
     border: none;
     border-radius: 8px;
     cursor: pointer;
     position: relative;
+}
 
+.goniometer-button::after {
+    content: '\f24d';
+    font-family: 'FontAwesome';
+    vertical-align: middle;
+    text-align: center;
+    font-size: 1rem;
+    font-weight: 400;
 }
 
 .goniometer-button:hover {
