@@ -1,6 +1,7 @@
 :root {
 	--darkblue: #1e4759;
 	--teal: #009f96;
+    --lighter-teal: #009f964d;
 	--yellow: #f5b672;
 	--orange: #f2896f;
 	--red: #dc5556;
@@ -15,6 +16,7 @@
     background: none;
     width: auto;
     height: auto;
+    border-radius: 25px;
     /* border: 1px solid black; */
     background-color: #f2f2f24d;
 }
@@ -22,20 +24,22 @@
     z-index: 1000;
     /* top: 20%;
     left: 20%; */
-    position: fixed;
-    background-color: #f2f2f24d;
+    position: relative;
+    /* background-color: #f2f2f24d;
+    border-radius: 25px; */
 }
 
 .goniometer-title {
     position: relative;
     color: black;
-    padding: 1rem;
-    width: 400px;
+    padding: 1rem 0.5rem;
+    width: stretch;
     display: flex;
     flex-direction: row;
     justify-content: space-between;
     align-items: center;
-    /* background-color: #f2f2f24d; */
+    /* border-radius: 25px;
+    background-color: #f2f2f24d; */
 
     h1 {
         padding: 0.5rem 1rem;
@@ -51,9 +55,13 @@
     border-radius: 8px;
     cursor: pointer;
     position: relative;
+
+    button {
+        padding: 0 0.5rem;
+    }
 }
 
-.goniometer-button::after {
+#copy-btn::after {
     content: '\f24d';
     font-family: 'FontAwesome';
     vertical-align: middle;
@@ -62,6 +70,15 @@
     font-weight: 400;
 }
 
-.goniometer-button:hover {
+#reset-btn::after {
+    content: '\f0e2';
+    font-family: 'FontAwesome';
+    vertical-align: middle;
+    text-align: center;
+    font-size: 1rem;
+    font-weight: 200;
+}
+
+#copy-btn:hover, #reset-btn:hover {
   color: var(--teal)
 }
