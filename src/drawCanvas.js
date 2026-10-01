@@ -145,12 +145,17 @@ export function drawUnitCircle(ctx, center, radius = CONSTANTS.CIRCLE_RADIUS, co
 //make universal
 function piLabel(i, slices) {
   // angle = 2π * i / slices = π * (2i / slices)
-  let n = 2 * i, d = slices;
+  let n = 2 * i
+  let d = slices;
+  //computes the greatest common divisor (GCD)
   const g = (a, b) => (b ? g(b, a % b) : a);
   const k = g(n, d);
-  n /= k; d /= k;
+  n /= k; // n = n/k
+  d /= k; // d = d/k
   if (n === 0) return "0";
+  //1 = 1pi
   const num = n === 1 ? "π" : `${n}π`;
+  //if there is a denominator 
   return d === 1 ? num : `${num}/${d}`;
 }
 
