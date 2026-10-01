@@ -58,36 +58,44 @@
 
     button {
         padding: 0 0.5rem;
+        vertical-align: middle;
+        text-align: center;
+        font-size: 1rem;
+        font-weight: 400;
+    }
+
+    button:hover {
+        color: var(--teal);
     }
 }
 
 #copy-btn::after {
     content: '\f24d';
     font-family: 'FontAwesome';
-    vertical-align: middle;
+    /* vertical-align: middle;
     text-align: center;
     font-size: 1rem;
-    font-weight: 400;
+    font-weight: 400; */
 }
 
 #reset-btn::after {
     content: '\f0e2';
     font-family: 'FontAwesome';
-    vertical-align: middle;
+    /* vertical-align: middle;
     text-align: center;
     font-size: 1rem;
-    font-weight: 200;
+    font-weight: 200; */
 }
 
 #close-btn::after {
     content: '\f00d';
     font-family: 'FontAwesome';
-    vertical-align: middle;
+    /* vertical-align: middle;
     text-align: center;
     font-size: 1rem;
-    font-weight: 200;
+    font-weight: 200; */
 }
 
-#copy-btn:hover, #reset-btn:hover, #close-btn:hover {
+/* #copy-btn:hover, #reset-btn:hover, #close-btn:hover {
   color: var(--teal)
-}
+} */

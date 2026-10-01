@@ -1,3 +1,6 @@
+export const MATH = {
+  TWOPI: Math.PI * 2
+}
 
 export function calculateGoniometerAngle(center, firstPoint, secondPoint) {
   // Angle from center to first point
@@ -11,16 +14,12 @@ export function calculateGoniometerAngle(center, firstPoint, secondPoint) {
     secondPoint.y - center.y, 
     secondPoint.x - center.x
   );
+
+  //SMALLEST AMGLE IN RAD
+  let diff = Math.abs(angle2 - angle1) % (2 * Math.PI);
+  let angleRad = diff > Math.PI ? 2 * Math.PI - diff : diff;
   
-  // Angle between the two lines
-  let angleDeg = Math.abs((angle2 - angle1) * 180 / Math.PI);
-  
-  // Ensure it's between 0-180° (not 0-360°)
-  if (angleDeg > 180) {
-    angleDeg = 360 - angleDeg;
-  }
-  
-  return angleDeg;
+  return angleRad;
 }
 
 export function calculateMidPointAngles(center, firstPoint, secondPoint) {
@@ -41,13 +40,7 @@ export function calculateMidPointAngles(center, firstPoint, secondPoint) {
   ];
 }
 
-export function getSectorCenter(center, startAngle, endAngle, radius, selectedPoint, first, second) {
-  
-  // if (selectedPoint == first) {
-  //   [startAngle, endAngle] = calculateMidPointAngles(center, second, first);
-  // } else if (selectedPoint == second) {
-  //   [startAngle, endAngle] = calculateMidPointAngles(center, first, second);
-  // }
+export function getSectorCenter(center, startAngle, endAngle, radius) {
 
   const angle = (startAngle + endAngle) / 2;
   const sectorAngle = endAngle - startAngle;

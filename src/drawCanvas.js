@@ -1,7 +1,8 @@
-import {calculateMidPointAngles, getSectorCenter} from './mathUtils.js';
+import {calculateMidPointAngles, getSectorCenter, MATH} from './mathUtils.js';
+import {AngleState} from './angleState.js'
 import './styles.css'; 
 
-const CONSTANTS = {
+export const CONSTANTS = {
   CIRCLE_RADIUS: 200,
   SECTOR_RADIUS: 70,
   SLICES: 12,
@@ -31,13 +32,28 @@ export function drawAngleText(ctx, angle, x, y, fontSize = CONSTANTS.TEXT_FONT_S
   ctx.fillStyle = color;
   ctx.textAlign = 'center';
   ctx.textBaseline = 'middle';
-  ctx.fillText(`${angle.toFixed(1)}°`, x, y);
+
+  if (AngleState.useDegrees) {
+    ctx.fillText(`${angle.toFixed(1)}°`, x, y);
+  } else {
+    ctx.fillText(`${angle}`, x, y);
+  }
+  
 }
+
+// function drawAngles(ctx, angle) {
+//   if (AngleState.useDegrees) {
+//     const displayAngle = toDegrees(angle);
+//     ctx.fillText(`${displayAngle.toFixed(1)}°`, x, y);
+//   } else {
+//     ctx.fillText(`${angle.toFixed(2)}π`, x, y);
+//   }
+// }
 
 export function drawDot(ctx, x, y, color = CONSTANTS.TEXT_COLOR, radius = CONSTANTS.DOT_RADIUS) {
   ctx.fillStyle = color;
   ctx.beginPath()
-  ctx.arc(x, y, radius, 0, Math.PI * 2);
+  ctx.arc(x, y, radius, 0, MATH.TWOPI);
   ctx.fill();
   
 }
@@ -53,7 +69,7 @@ export function drawLine(ctx, x1, y1, x2, y2, color = CONSTANTS.LINE_COLOR, line
   ctx.setLineDash([]);          
 }
 
-export function midPointArea(ctx, center, first, second, angleDeg, selectedPoint, radius = CONSTANTS.SECTOR_RADIUS, fillColor = CONSTANTS.SECTOR_COLOR) {
+export function midPointArea(ctx, center, first, second, angleDeg, radius = CONSTANTS.SECTOR_RADIUS, fillColor = CONSTANTS.SECTOR_COLOR) {
 
   const [startAngle, endAngle] = calculateMidPointAngles(center, first, second);
 
@@ -65,8 +81,11 @@ export function midPointArea(ctx, center, first, second, angleDeg, selectedPoint
   ctx.fillStyle = fillColor;
   ctx.fill();
 
-  const sectorCenPt = getSectorCenter(center, startAngle, endAngle, radius, selectedPoint, first, second);
-  drawAngleText(ctx, angleDeg, sectorCenPt.x, sectorCenPt.y);
+  const sectorCenPt = getSectorCenter(center, startAngle, endAngle, radius);
+
+  const labelText = toDegrees(angleDeg);
+
+  drawAngleText(ctx, labelText, sectorCenPt.x, sectorCenPt.y);
 }
 
 export function drawUnitCircle(ctx, center, radius = CONSTANTS.CIRCLE_RADIUS, color = CONSTANTS.CIRCLE_COLOR)  {
@@ -78,13 +97,13 @@ export function drawUnitCircle(ctx, center, radius = CONSTANTS.CIRCLE_RADIUS, co
   ctx.strokeStyle = 'black';
   ctx.lineWidth = CONSTANTS.LINE_WIDTH;
   ctx.beginPath();
-  ctx.arc(center.x, center.y, radius, 0, Math.PI * 2);
+  ctx.arc(center.x, center.y, radius, 0, MATH.TWOPI);
   ctx.stroke();
 
   // Draw center point
   ctx.fillStyle = color;
   ctx.beginPath();
-  ctx.arc(center.x, center.y, 4, 0, Math.PI * 2);
+  ctx.arc(center.x, center.y, 4, 0, MATH.TWOPI);
   ctx.fill();
 
   //Draw slices
@@ -93,28 +112,45 @@ export function drawUnitCircle(ctx, center, radius = CONSTANTS.CIRCLE_RADIUS, co
 
   for (let i = 0; i < slices; i++) {
     ctx.strokeStyle = color;
-    const angle = (i * 2 * Math.PI) / slices;
-    const step = (2 * Math.PI) / slices;
+
+    //math func
+    const angle = (i * MATH.TWOPI) / slices;
+    const step = (MATH.TWOPI) / slices;
     const labelAngle = i * step - Math.PI / 2;
+    let labelText = angle;
+
     ctx.beginPath();
     ctx.moveTo(center.x, center.y);
     ctx.lineTo(center.x + radius * Math.cos(angle), center.y + radius * Math.sin(angle));
+    
     const point = {
       x: (center.x + (radius * 0.85) * Math.cos(labelAngle)),
       y: (center.y + (radius * 0.85) * Math.sin(labelAngle))
     }
-    const labelText = toDegrees(angle);
-    drawLabels(ctx, labelText, point);
+
+    if (AngleState.useDegrees) {
+      labelText = toDegrees(angle);
+    } else {
+      labelText = piLabel(i, slices);
+    }
+     
+    drawAngleText(ctx, labelText, point.x, point.y);
     ctx.stroke();
   }
 
   ctx.setLineDash([]);
 }
 
-function drawLabels(ctx, text, point) {
-  ctx.fillStyle = 'black';
-  ctx.font = `16px Arial`;
-  ctx.textAlign = 'center';
-  ctx.textBaseline = 'middle';
-  ctx.fillText(`${text.toFixed(1)}°`, point.x, point.y);
+
+//make universal
+function piLabel(i, slices) {
+  // angle = 2π * i / slices = π * (2i / slices)
+  let n = 2 * i, d = slices;
+  const g = (a, b) => (b ? g(b, a % b) : a);
+  const k = g(n, d);
+  n /= k; d /= k;
+  if (n === 0) return "0";
+  const num = n === 1 ? "π" : `${n}π`;
+  return d === 1 ? num : `${num}/${d}`;
 }
+
