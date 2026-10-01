@@ -41,6 +41,9 @@ export function createElement() {
     const goniometerTitle = document.createElement('h1');
     const copyButton = document.createElement('button');
     const resetButton = document.createElement('button');
+    const closeButton = document.createElement('button');
+    const convertDegButton = document.createElement('button');
+    const convertRadButton = document.createElement('button');
     const buttons = document.createElement('div');
     
     goniometerTitle.innerHTML = 'VCC GonioMeter';
@@ -48,13 +51,18 @@ export function createElement() {
 
     buttons.classList.add("goniometer-button");
     copyButton.id = "copy-btn"
-    // resetButton.classList.add("goniometer-button");
     resetButton.id = "reset-btn";
+    closeButton.id = "close-btn";
+    convertDegButton.textContent = "Degrees";
+    convertRadButton.textContent = "Radians";
 
-    gonioMeter.append(goniometerTitle);
+    // gonioMeter.append(goniometerTitle);
     gonioMeter.append(buttons);
+    buttons.append(convertDegButton);
+    buttons.append(convertRadButton);
     buttons.append(copyButton);
     buttons.append(resetButton);
+    buttons.append(closeButton);
 
     const canvas = document.createElement('canvas');
     canvas.id = "goniometer-canvas";
@@ -69,11 +77,11 @@ export function createElement() {
 
     activate();
     attachCanvasList(canvas);
-    attackButtonList(copyButton, resetButton);
+    attackButtonList(copyButton, resetButton, closeButton, convertDegButton, convertRadButton);
     
 }
 
-function attackButtonList(copyButton, resetButton) {
+function attackButtonList(copyButton, resetButton, closeButton, convertDegButton, convertRadButton) {
   copyButton.addEventListener('click', (e) => {
     var copyText = `${angleDeg.toFixed(1)}°`;
     copyToClipboard(copyText);
@@ -81,6 +89,18 @@ function attackButtonList(copyButton, resetButton) {
 
   resetButton.addEventListener('click', (e) => {
     activate();
+  });
+
+  closeButton.addEventListener('click', (e) => {
+    showHideElement(DRAWER_ID, false);
+  });
+
+  convertDegButton.addEventListener('click', (e) => {
+    console.log("convert deg");
+  });
+
+  convertRadButton.addEventListener('click', (e) => {
+    console.log("convert rad");
   });
 }
 
@@ -147,8 +167,6 @@ function draw(ctx, canvas) {
   angleDeg = calculateGoniometerAngle(center, first, second);
 
   midPointArea(ctx, center, midPt1, midPt2, angleDeg, selectedPoint);
-
-  // drawAngleText(ctx, angleDeg, center.x - 10, center.y - 10);
 
 }
 

@@ -1,3 +1,4 @@
+
 export function calculateGoniometerAngle(center, firstPoint, secondPoint) {
   // Angle from center to first point
   const angle1 = Math.atan2(
@@ -42,11 +43,11 @@ export function calculateMidPointAngles(center, firstPoint, secondPoint) {
 
 export function getSectorCenter(center, startAngle, endAngle, radius, selectedPoint, first, second) {
   
-  if (selectedPoint == first) {
-    [startAngle, endAngle] = calculateMidPointAngles(center, second, first);
-  } else if (selectedPoint == second) {
-    [startAngle, endAngle] = calculateMidPointAngles(center, first, second);
-  }
+  // if (selectedPoint == first) {
+  //   [startAngle, endAngle] = calculateMidPointAngles(center, second, first);
+  // } else if (selectedPoint == second) {
+  //   [startAngle, endAngle] = calculateMidPointAngles(center, first, second);
+  // }
 
   const angle = (startAngle + endAngle) / 2;
   const sectorAngle = endAngle - startAngle;

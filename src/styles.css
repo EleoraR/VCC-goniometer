@@ -79,6 +79,15 @@
     font-weight: 200;
 }
 
-#copy-btn:hover, #reset-btn:hover {
+#close-btn::after {
+    content: '\f00d';
+    font-family: 'FontAwesome';
+    vertical-align: middle;
+    text-align: center;
+    font-size: 1rem;
+    font-weight: 200;
+}
+
+#copy-btn:hover, #reset-btn:hover, #close-btn:hover {
   color: var(--teal)
 }
