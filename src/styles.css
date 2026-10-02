@@ -8,10 +8,24 @@
     --whiteish: #f2f2f2;
 }
 
+#goniometer-handle {
+    padding: 0 0.5rem;
+    vertical-align: middle;
+    text-align: center;
+    font-size: 1rem;
+    font-weight: 400;
+    user-select: none;
+
+    &::after {
+        content: '\f0b2';
+        font-family: 'FontAwesome';
+    }
+}
+
 .goniometer-container {
     z-index: 999;
-    top: 20%;
-    left: 20%;
+    top: 100px;
+    left: 200px;
     position: fixed;
     background: none;
     width: auto;
@@ -19,6 +33,8 @@
     border-radius: 25px;
     /* border: 1px solid black; */
     background-color: #f2f2f24d;
+    overflow: hidden;
+    resize: both;
 }
 #goniometer-canvas {
     z-index: 1000;
@@ -95,7 +111,3 @@
     font-size: 1rem;
     font-weight: 200; */
 }
-
-/* #copy-btn:hover, #reset-btn:hover, #close-btn:hover {
-  color: var(--teal)
-} */

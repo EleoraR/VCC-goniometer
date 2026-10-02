@@ -9,11 +9,23 @@ export class DragAndMove {
   private lastX = 0;
   private lastY = 0;
 
+  //adjustments for strip-only mode error
+  private readonly handleElement: HTMLElement;
+  private readonly movingElement: HTMLElement;
+  private readonly documentContext: Document = document;
+
   constructor(
-    private readonly handleElement: HTMLElement,
-    private readonly movingElement: HTMLElement,
-    private readonly documentContext: Document = document,
+    //adjustments for strip-only mode error
+    handleElement: HTMLElement,
+    movingElement: HTMLElement,
+    documentContext: Document = document,
   ) {
+
+    //adjustments for strip-only mode error
+    this.handleElement = handleElement;
+    this.movingElement = movingElement;
+    this.documentContext = documentContext;
+
     this.onPointerDown = this.onPointerDown.bind(this);
     this.onPointerMove = this.onPointerMove.bind(this);
     this.onPointerUp = this.onPointerUp.bind(this);

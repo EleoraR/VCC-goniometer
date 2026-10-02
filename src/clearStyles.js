@@ -3,6 +3,7 @@ import './styles.css';
 import {calculateGoniometerAngle} from './mathUtils.js';
 import {drawUnitCircle, drawLine, drawDot, midPointArea} from './drawCanvas.js';
 import {AngleState} from './angleState.js'
+import { DragAndMove } from "./DragAndMove";
 
 export function clearStyles(id) {
 const el = document.getElementById(id);
@@ -37,18 +38,21 @@ export function createElement() {
     const mainDiv = document.getElementById(DRAWER_ID);
     const container = document.createElement('div');
     container.classList.add('goniometer-container');
+    container.id = "goniometer-panel";
 
     const gonioMeter = document.createElement('div');
+    const dragHandle = document.createElement('div');
     const goniometerTitle = document.createElement('h1');
     const copyButton = document.createElement('button');
     const resetButton = document.createElement('button');
     const closeButton = document.createElement('button');
     const convertDegButton = document.createElement('button');
-    // const convertRadButton = document.createElement('button');
     const buttons = document.createElement('div');
     
     goniometerTitle.innerHTML = 'VCC GonioMeter';
     gonioMeter.classList.add('goniometer-title');
+
+    dragHandle.id = "goniometer-handle";
 
     buttons.classList.add("goniometer-button");
     copyButton.id = "copy-btn"
@@ -56,12 +60,12 @@ export function createElement() {
     closeButton.id = "close-btn";
     convertDegButton.id = "deg-btn";
     convertDegButton.textContent = "Degrees";
-    // convertRadButton.textContent = "Radians";
-
+  
+    gonioMeter.append(dragHandle);
     gonioMeter.append(goniometerTitle);
     gonioMeter.append(buttons);
     buttons.append(convertDegButton);
-    // buttons.append(convertRadButton);
+
     buttons.append(copyButton);
     buttons.append(resetButton);
     buttons.append(closeButton);
@@ -80,12 +84,23 @@ export function createElement() {
     activate();
     attachCanvasList(canvas);
     attackButtonList(copyButton, resetButton, closeButton, convertDegButton);
+    activateDrag();
     
+}
+
+function activateDrag() {
+  const panel = document.querySelector("#goniometer-panel");
+  const handle = document.querySelector("#goniometer-handle");
+
+  if (panel && handle) {
+    const drag = new DragAndMove(handle, panel);
+    drag.activate();
+  } 
 }
 
 function attackButtonList(copyButton, resetButton, closeButton, convertDegButton) {
   copyButton.addEventListener('click', (e) => {
-    var copyText = `${angleDeg.toFixed(1)}°`;
+    var copyText = `${AngleState.toDegrees(angleDeg).toFixed(1)}°`;
     copyToClipboard(copyText);
   });
 
@@ -98,7 +113,6 @@ function attackButtonList(copyButton, resetButton, closeButton, convertDegButton
   });
 
   convertDegButton.addEventListener('click', (e) => {
-    console.log("converting");
     AngleState.useDegrees = !AngleState.useDegrees;
     activate();
   });
@@ -129,6 +143,15 @@ function attachCanvasList(canvas) {
 }
 
 export function activate() {
+
+  const stateBtn = document.getElementById('deg-btn');
+
+  if (AngleState.useDegrees) {
+    stateBtn.textContent = "Degrees";
+  } else {
+    stateBtn.textContent = "Radians";
+  }
+
   const canvas = document.getElementById('goniometer-canvas');
   const ctx = canvas.getContext('2d');
 

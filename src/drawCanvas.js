@@ -16,9 +16,6 @@ export const CONSTANTS = {
   SECTOR_COLOR: '#009f964d'
 }
 
-const toDegrees = (rad) => rad * 180 / Math.PI;
-const toRadians = (deg) => deg * Math.PI / 180;
-
 export function drawDistText(ctx, dist, x, y, fontSize = CONSTANTS.TEXT_FONT_SIZE, color = CONSTANTS.TEXT_COLOR) {
   ctx.font = `${fontSize}px Arial`;
   ctx.fillStyle = color;
@@ -32,23 +29,9 @@ export function drawAngleText(ctx, angle, x, y, fontSize = CONSTANTS.TEXT_FONT_S
   ctx.fillStyle = color;
   ctx.textAlign = 'center';
   ctx.textBaseline = 'middle';
-
-  if (AngleState.useDegrees) {
-    ctx.fillText(`${angle.toFixed(1)}°`, x, y);
-  } else {
-    ctx.fillText(`${angle}`, x, y);
-  }
+  ctx.fillText(`${angle}`, x, y);
   
 }
-
-// function drawAngles(ctx, angle) {
-//   if (AngleState.useDegrees) {
-//     const displayAngle = toDegrees(angle);
-//     ctx.fillText(`${displayAngle.toFixed(1)}°`, x, y);
-//   } else {
-//     ctx.fillText(`${angle.toFixed(2)}π`, x, y);
-//   }
-// }
 
 export function drawDot(ctx, x, y, color = CONSTANTS.TEXT_COLOR, radius = CONSTANTS.DOT_RADIUS) {
   ctx.fillStyle = color;
@@ -83,7 +66,7 @@ export function midPointArea(ctx, center, first, second, angleDeg, radius = CONS
 
   const sectorCenPt = getSectorCenter(center, startAngle, endAngle, radius);
 
-  const labelText = toDegrees(angleDeg);
+  const labelText = `${AngleState.toDegrees(angleDeg).toFixed(1)}°`;
 
   drawAngleText(ctx, labelText, sectorCenPt.x, sectorCenPt.y);
 }
@@ -91,7 +74,6 @@ export function midPointArea(ctx, center, first, second, angleDeg, radius = CONS
 export function drawUnitCircle(ctx, center, radius = CONSTANTS.CIRCLE_RADIUS, color = CONSTANTS.CIRCLE_COLOR)  {
 
   let slices = CONSTANTS.SLICES
-  let offset = 20;
 
   // Draw the circle
   ctx.strokeStyle = 'black';
@@ -129,7 +111,7 @@ export function drawUnitCircle(ctx, center, radius = CONSTANTS.CIRCLE_RADIUS, co
     }
 
     if (AngleState.useDegrees) {
-      labelText = toDegrees(angle);
+      labelText = `${AngleState.toDegrees(angle).toFixed(1)}°`;
     } else {
       labelText = piLabel(i, slices);
     }
