@@ -30,15 +30,13 @@ export function drawAngleText(ctx, angle, x, y, fontSize = CONSTANTS.TEXT_FONT_S
   ctx.textAlign = 'center';
   ctx.textBaseline = 'middle';
   ctx.fillText(`${angle}`, x, y);
-  
 }
 
-export function drawDot(ctx, x, y, color = CONSTANTS.TEXT_COLOR, radius = CONSTANTS.DOT_RADIUS) {
+export function drawDot(ctx, x, y, radius = CONSTANTS.DOT_RADIUS, color = CONSTANTS.TEXT_COLOR) {
   ctx.fillStyle = color;
   ctx.beginPath()
   ctx.arc(x, y, radius, 0, MATH.TWOPI);
   ctx.fill();
-  
 }
 
 export function drawLine(ctx, x1, y1, x2, y2, color = CONSTANTS.LINE_COLOR, lineWidth = CONSTANTS.LINE_WIDTH) {
@@ -65,28 +63,33 @@ export function midPointArea(ctx, center, first, second, angleDeg, radius = CONS
   ctx.fill();
 
   const sectorCenPt = getSectorCenter(center, startAngle, endAngle, radius);
+  var labelText = `{angleDeg}`;
 
-  const labelText = `${AngleState.toDegrees(angleDeg).toFixed(1)}°`;
+  if (AngleState.useDegrees) {
+    labelText = `${AngleState.toDegrees(angleDeg).toFixed(1)}°`;
+  } else {
+    labelText = `${angleDeg.toFixed(1)}`;
+  }
 
   drawAngleText(ctx, labelText, sectorCenPt.x, sectorCenPt.y);
+}
+
+function drawCircleOutline(ctx, center, radius, color) {
+  ctx.strokeStyle = color;
+  ctx.lineWidth = CONSTANTS.LINE_WIDTH;
+  ctx.beginPath();
+  ctx.arc(center.x, center.y, radius, 0, MATH.TWOPI);
+  ctx.stroke();
+
 }
 
 export function drawUnitCircle(ctx, center, radius = CONSTANTS.CIRCLE_RADIUS, color = CONSTANTS.CIRCLE_COLOR)  {
 
   let slices = CONSTANTS.SLICES
 
-  // Draw the circle
-  ctx.strokeStyle = 'black';
-  ctx.lineWidth = CONSTANTS.LINE_WIDTH;
-  ctx.beginPath();
-  ctx.arc(center.x, center.y, radius, 0, MATH.TWOPI);
-  ctx.stroke();
+  drawCircleOutline(ctx, center, radius, 'black');
 
-  // Draw center point
-  ctx.fillStyle = color;
-  ctx.beginPath();
-  ctx.arc(center.x, center.y, 4, 0, MATH.TWOPI);
-  ctx.fill();
+  drawDot(ctx, center.x, center.y, CONSTANTS.DOT_RADIUS, color);
 
   //Draw slices
   ctx.setLineDash([10, 5]);
