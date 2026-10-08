@@ -27,6 +27,7 @@ const el = document.getElementById(id);
 
 export const APP_CONSTANTS = {
   WIDTH: 420,
+  HEIGHT: 500,
   CIRCLE_RADIUS: 200
 }
 
@@ -43,7 +44,7 @@ export function createElement() {
   const container = document.createElement('div');
   const gonioMeter = document.createElement('div');
   const dragHandle = document.createElement('div');
-  const goniometerTitle = document.createElement('h1');
+  const resizeHandle = document.createElement('div');
   const copyButton = document.createElement('button');
   const resetButton = document.createElement('button');
   const closeButton = document.createElement('button');
@@ -61,22 +62,24 @@ export function createElement() {
   resetButton.id = "reset-btn";
   closeButton.id = "close-btn";
   convertDegButton.id = "deg-btn";
+  resizeHandle.id = "resize-btn";
   canvas.id = "goniometer-canvas";
 
-  goniometerTitle.innerHTML = 'VCC GonioMeter';
-  convertDegButton.textContent = "Degrees";
+  convertDegButton.textContent = "°";
 
-  canvas.width = APP_CONSTANTS.WIDTH;  
-  canvas.height = APP_CONSTANTS.WIDTH; 
+  container.style.width = `${APP_CONSTANTS.WIDTH}px`;
+  container.style.height = `${APP_CONSTANTS.HEIGHT}px`;
+  canvas.width = APP_CONSTANTS.WIDTH;
+  canvas.height = APP_CONSTANTS.WIDTH;
 
-  gonioMeter.append(dragHandle, goniometerTitle, buttons);
-  buttons.append(convertDegButton, copyButton, resetButton, closeButton);
+  gonioMeter.append(buttons);
+  buttons.append(dragHandle, convertDegButton, copyButton, resetButton, closeButton, resizeHandle);
   mainDiv.append(container);
   container.append(gonioMeter, canvas);
 
   activate();
   attachCanvasListeners(canvas);
-  attachButtonListeners(copyButton, resetButton, closeButton, convertDegButton);
+  attachButtonListeners(copyButton, resetButton, closeButton, convertDegButton, resizeHandle);
   activateDrag();
 }
 
@@ -90,7 +93,7 @@ function activateDrag() {
   } 
 }
 
-function attachButtonListeners(copyButton, resetButton, closeButton, convertDegButton) {
+function attachButtonListeners(copyButton, resetButton, closeButton, convertDegButton, resizeHandle) {
   copyButton.addEventListener('click', (e) => {
     if (angleDeg){
       var copyText = AngleState.format(angleDeg);
@@ -109,6 +112,10 @@ function attachButtonListeners(copyButton, resetButton, closeButton, convertDegB
   convertDegButton.addEventListener('click', (e) => {
     AngleState.useDegrees = !AngleState.useDegrees;
     activate();
+  });
+
+  resizeHandle.addEventListener('mousedown', (e) => {
+    resize();
   });
 }
 
@@ -180,6 +187,11 @@ function initializePoints(canvas) {
     { x: center.x - APP_CONSTANTS.CIRCLE_RADIUS, y: center.y, radius: APP_CONSTANTS.CIRCLE_RADIUS },
     { x: center.x + APP_CONSTANTS.CIRCLE_RADIUS, y: center.y, radius: APP_CONSTANTS.CIRCLE_RADIUS }
   ];
+}
+
+function resize() {
+  console.log("resizing");
+
 }
 
 export function showHideElement(elementId, showHide) {

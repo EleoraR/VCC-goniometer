@@ -9,7 +9,7 @@ export class AngleState {
   }
 
   static text() {
-    return AngleState.useDegrees ? "Degrees" : "Radians";
+    return AngleState.useDegrees ? "°" : "π";
   }
 
 }
