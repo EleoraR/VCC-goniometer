@@ -1,9 +1,10 @@
 import { DRAWER_ID } from "../lib/constants";
 import './styles.css'; 
 import {calculateGoniometerAngle, getMidPoint, getCenter, getMousePos} from './mathUtils.js';
-import {drawUnitCircle, drawLine, drawDot, midPointArea} from './drawCanvas.js';
+import {drawUnitCircle, drawLine, drawDot, midPointArea, CONSTANTS} from './drawCanvas.js';
 import {AngleState} from './angleState.js'
 import { DragAndMove } from "./DragAndMove";
+import { Resize } from "./Resize.js";
 
 export function clearStyles(id) {
 const el = document.getElementById(id);
@@ -27,7 +28,7 @@ const el = document.getElementById(id);
 
 export const APP_CONSTANTS = {
   WIDTH: 420,
-  HEIGHT: 500,
+  HEIGHT: 520,
   CIRCLE_RADIUS: 200
 }
 
@@ -69,18 +70,29 @@ export function createElement() {
 
   container.style.width = `${APP_CONSTANTS.WIDTH}px`;
   container.style.height = `${APP_CONSTANTS.HEIGHT}px`;
-  canvas.width = APP_CONSTANTS.WIDTH;
-  canvas.height = APP_CONSTANTS.WIDTH;
 
   gonioMeter.append(buttons);
-  buttons.append(dragHandle, convertDegButton, copyButton, resetButton, closeButton, resizeHandle);
+  buttons.append(dragHandle, convertDegButton, copyButton, resetButton, closeButton);
   mainDiv.append(container);
-  container.append(gonioMeter, canvas);
+  container.append(gonioMeter, canvas, resizeHandle);
 
-  activate();
+  const ro = new ResizeObserver(entries => {
+    const { width, height } = entries[0].contentRect;
+    APP_CONSTANTS.WIDTH = Math.round(width);
+    APP_CONSTANTS.HEIGHT = Math.round(width);
+    APP_CONSTANTS.CIRCLE_RADIUS = (APP_CONSTANTS.WIDTH /2) - 10;
+    canvas.width = APP_CONSTANTS.WIDTH;
+    canvas.height = APP_CONSTANTS.HEIGHT;
+    changeFontSize();
+    activate(); 
+  });
+  ro.observe(container);
+
+  // activate();
   attachCanvasListeners(canvas);
   attachButtonListeners(copyButton, resetButton, closeButton, convertDegButton, resizeHandle);
   activateDrag();
+  activateResize();
 }
 
 function activateDrag() {
@@ -91,6 +103,16 @@ function activateDrag() {
     const drag = new DragAndMove(handle, panel);
     drag.activate();
   } 
+}
+
+function activateResize() {
+  const panel = document.querySelector("#goniometer-panel");
+  const handle = document.querySelector("#resize-btn");
+
+  if (panel && handle) {
+    const resize = new Resize(handle, panel);
+    resize.activate();
+  }
 }
 
 function attachButtonListeners(copyButton, resetButton, closeButton, convertDegButton, resizeHandle) {
@@ -115,13 +137,18 @@ function attachButtonListeners(copyButton, resetButton, closeButton, convertDegB
   });
 
   resizeHandle.addEventListener('mousedown', (e) => {
-    resize();
+    
   });
 }
 
 function copyToClipboard(text) {
   navigator.clipboard.writeText(text);
   alert("Copied to clipboard: " + text);
+}
+
+function changeFontSize(width = APP_CONSTANTS.WIDTH, height = APP_CONSTANTS.HEIGHT) {
+  const fontSize = Math.max(10, Math.round(Math.min(width, height) * 0.05));
+  CONSTANTS.TEXT_FONT_SIZE = fontSize;
 }
 
 function attachCanvasListeners(canvas) {
@@ -187,11 +214,6 @@ function initializePoints(canvas) {
     { x: center.x - APP_CONSTANTS.CIRCLE_RADIUS, y: center.y, radius: APP_CONSTANTS.CIRCLE_RADIUS },
     { x: center.x + APP_CONSTANTS.CIRCLE_RADIUS, y: center.y, radius: APP_CONSTANTS.CIRCLE_RADIUS }
   ];
-}
-
-function resize() {
-  console.log("resizing");
-
 }
 
 export function showHideElement(elementId, showHide) {

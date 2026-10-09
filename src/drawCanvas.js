@@ -61,7 +61,7 @@ export function drawArc(ctx, x, y, radius, startAngle, endAngle, color, counterc
   ctx.fill();
 }
 
-export function midPointArea(ctx, center, first, second, angleDeg, radius = CONSTANTS.SECTOR_RADIUS, fillColor = CONSTANTS.SECTOR_COLOR) {
+export function midPointArea(ctx, center, first, second, angleDeg, radius = APP_CONSTANTS.CIRCLE_RADIUS, fillColor = CONSTANTS.SECTOR_COLOR) {
   const [startAngle, endAngle] = calculateMidPointAngles(center, first, second);
   drawArc(ctx, center.x,center.y,radius,startAngle,endAngle, fillColor);
   const sectorCenPt = getSectorCenter(center, startAngle, endAngle, radius);
