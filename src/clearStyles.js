@@ -200,7 +200,6 @@ function activate() {
 function draw(ctx, canvas) {
 
   if (!points) return;
-  console.log(points);
 
   const center = getCenter(canvas);
   const [first, second] = points;
