@@ -1,11 +1,9 @@
-import {calculateMidPointAngles, getSectorCenter, MATH} from './mathUtils.js';
+import {calculateMidPointAngles, distBetweenTwoPoints, getSectorCenter, MATH} from './mathUtils.js';
 import {AngleState} from './angleState.js'
 import { APP_CONSTANTS  } from './clearStyles.js';
 import './styles.css'; 
 
 export const CONSTANTS = {
-  // CIRCLE_RADIUS: 200,
-  SECTOR_RADIUS: 70,
   SLICES: 12,
   CIRCLE_COLOR: '#747474',
   DOT_RADIUS: 5,
@@ -42,27 +40,31 @@ export function drawDot(ctx, x, y, radius = CONSTANTS.DOT_RADIUS, color = CONSTA
 }
 
 export function drawLine(ctx, x1, y1, x2, y2, dashed = [10, 5], color = CONSTANTS.LINE_COLOR, lineWidth = CONSTANTS.LINE_WIDTH) {
-  ctx.setLineDash(dashed);
+  // ctx.setLineDash(dashed);
   ctx.strokeStyle = color;
   ctx.lineWidth = lineWidth;
   ctx.beginPath();
   ctx.moveTo(x1, y1);    
   ctx.lineTo(x2, y2);    
   ctx.stroke();
-  ctx.setLineDash([]);          
+  // ctx.setLineDash([]);          
 }
 
 export function drawArc(ctx, x, y, radius, startAngle, endAngle, color, counterclockwise = false) {
   ctx.beginPath();
   ctx.moveTo(x, y);   
-  ctx.arc(x,y,radius,startAngle,endAngle,false);
+  ctx.arc(x,y,radius,startAngle,endAngle,counterclockwise);
   ctx.closePath();
   ctx.fillStyle = color;
   ctx.fill();
+  ctx.strokeStyle = '#009f96';
+  ctx.lineWidth = 3;
+  ctx.stroke();    
 }
 
-export function midPointArea(ctx, center, first, second, angleDeg, radius = APP_CONSTANTS.CIRCLE_RADIUS, fillColor = CONSTANTS.SECTOR_COLOR) {
-  const [startAngle, endAngle] = calculateMidPointAngles(center, first, second);
+export function midPointArea(ctx, center, midFirst, midSecond, angleDeg, radius = APP_CONSTANTS.CIRCLE_RADIUS, fillColor = CONSTANTS.SECTOR_COLOR) {
+  const [startAngle, endAngle] = calculateMidPointAngles(center, midFirst, midSecond);
+
   drawArc(ctx, center.x,center.y,radius,startAngle,endAngle, fillColor);
   const sectorCenPt = getSectorCenter(center, startAngle, endAngle, radius);
   drawAngleText(ctx, angleDeg, sectorCenPt.x, sectorCenPt.y);

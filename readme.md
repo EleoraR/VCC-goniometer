@@ -13,3 +13,4 @@
 #### Working on:
 - [ ] BUG: can't open after close
 - [ ] BUG: reset when resize
+- [ ] BUG: drawer toggle active state does not update

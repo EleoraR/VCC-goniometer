@@ -36,6 +36,8 @@
 #goniometer-canvas {
     z-index: 1000;
     position: relative;
+    display: block;
+    margin: auto;
 }
 
 .goniometer-title {
@@ -87,6 +89,7 @@
     right: 10px;
     bottom: 10px;
     font-size: 12px;
+    z-index: 9999;
 }
 
 #resize-icon-1 {

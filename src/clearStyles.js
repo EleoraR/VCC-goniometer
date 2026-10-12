@@ -27,8 +27,10 @@ const el = document.getElementById(id);
 }
 
 export const APP_CONSTANTS = {
-  WIDTH: 420,
+  WIDTH: 480,
   HEIGHT: 480,
+  CANVAS_WIDTH: 420,
+  CANVAS_HEIGHT: 420,
   CIRCLE_RADIUS: 200
 }
 
@@ -74,7 +76,7 @@ export function createElement() {
   resizeHandle.id = "resize-btn";
   canvas.id = "goniometer-canvas";
 
-  convertDegButton.textContent = "°";
+  convertDegButton.textContent = "degrees";
 
   container.style.width = `${APP_CONSTANTS.WIDTH}px`;
   container.style.height = `${APP_CONSTANTS.HEIGHT}px`;
@@ -86,12 +88,9 @@ export function createElement() {
 
   const ro = new ResizeObserver(entries => {
     const { width, height } = entries[0].contentRect;
-    if (width == 0 || height == 0) return;
-    APP_CONSTANTS.WIDTH = Math.round(width);
-    APP_CONSTANTS.HEIGHT = Math.round(height);
-    APP_CONSTANTS.CIRCLE_RADIUS = (APP_CONSTANTS.WIDTH /2) - 10;
-    canvas.width = APP_CONSTANTS.WIDTH;
-    canvas.height = APP_CONSTANTS.WIDTH;
+    updateConstants(width, height);
+    canvas.width = APP_CONSTANTS.CANVAS_WIDTH;
+    canvas.height = APP_CONSTANTS.CANVAS_HEIGHT;
     changeFontSize();
     activate(); 
   });
@@ -102,6 +101,16 @@ export function createElement() {
   attachButtonListeners(copyButton, resetButton, closeButton, convertDegButton, resizeHandle);
   activateDrag();
   activateResize();
+}
+
+function updateConstants(width, height) {
+  if (width == 0 || height == 0) return;
+  APP_CONSTANTS.WIDTH = Math.round(width);
+  APP_CONSTANTS.HEIGHT = Math.round(height);
+  APP_CONSTANTS.CANVAS_WIDTH = APP_CONSTANTS.WIDTH - 60;
+  APP_CONSTANTS.CANVAS_HEIGHT = APP_CONSTANTS.HEIGHT - 60;
+  APP_CONSTANTS.CIRCLE_RADIUS = (APP_CONSTANTS.CANVAS_WIDTH /2) - 10;
+  
 }
 
 function activateDrag() {
@@ -124,7 +133,7 @@ function activateResize() {
   }
 }
 
-function attachButtonListeners(copyButton, resetButton, closeButton, convertDegButton, resizeHandle) {
+function attachButtonListeners(copyButton, resetButton, closeButton, convertDegButton) {
   copyButton.addEventListener('click', (e) => {
     if (angleDeg){
       var copyText = AngleState.format(angleDeg);
@@ -144,10 +153,6 @@ function attachButtonListeners(copyButton, resetButton, closeButton, convertDegB
     AngleState.useDegrees = !AngleState.useDegrees;
     activate();
   });
-
-  resizeHandle.addEventListener('mousedown', (e) => {
-    
-  });
 }
 
 function copyToClipboard(text) {
@@ -156,7 +161,7 @@ function copyToClipboard(text) {
 }
 
 function changeFontSize(width = APP_CONSTANTS.WIDTH, height = APP_CONSTANTS.HEIGHT) {
-  const fontSize = Math.max(10, Math.round(Math.min(width, height) * 0.05));
+  const fontSize = Math.max(10, Math.round(Math.min(width, height) * 0.025));
   CONSTANTS.TEXT_FONT_SIZE = fontSize;
 }
 
@@ -202,13 +207,6 @@ function draw(ctx, canvas) {
   ctx.clearRect(0, 0, canvas.width, canvas.height);
 
   drawUnitCircle(ctx, center);
-
-  points.forEach(point => {
-    drawDot(ctx, point.x, point.y)
-  });
-
-  drawLine(ctx, first.x, first.y, center.x, center.y, []);
-  drawLine(ctx, center.x, center.y, second.x, second.y, []);
 
   angleDeg = calculateGoniometerAngle(center, first, second);
   midPointArea(ctx, center, getMidPoint(center, first), getMidPoint(center, second), angleDeg);
