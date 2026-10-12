@@ -28,7 +28,7 @@ const el = document.getElementById(id);
 
 export const APP_CONSTANTS = {
   WIDTH: 420,
-  HEIGHT: 520,
+  HEIGHT: 480,
   CIRCLE_RADIUS: 200
 }
 
@@ -45,13 +45,21 @@ export function createElement() {
   const container = document.createElement('div');
   const gonioMeter = document.createElement('div');
   const dragHandle = document.createElement('div');
-  const resizeHandle = document.createElement('div');
+  
   const copyButton = document.createElement('button');
   const resetButton = document.createElement('button');
   const closeButton = document.createElement('button');
   const convertDegButton = document.createElement('button');
   const buttons = document.createElement('div');
   const canvas = document.createElement('canvas');
+
+  const resizeHandle = document.createElement('div');
+  const resizeIcon1 = document.createElement('i');
+  const resizeIcon2 = document.createElement('i');
+  resizeIcon1.id = "resize-icon-1";
+  resizeIcon2.classList.add("icon", "icon-link");
+  resizeIcon1.append(resizeIcon2);
+  resizeHandle.append(resizeIcon1);
 
   container.classList.add('goniometer-container');
   gonioMeter.classList.add('goniometer-title');
@@ -78,11 +86,12 @@ export function createElement() {
 
   const ro = new ResizeObserver(entries => {
     const { width, height } = entries[0].contentRect;
+    if (width == 0 || height == 0) return;
     APP_CONSTANTS.WIDTH = Math.round(width);
-    APP_CONSTANTS.HEIGHT = Math.round(width);
+    APP_CONSTANTS.HEIGHT = Math.round(height);
     APP_CONSTANTS.CIRCLE_RADIUS = (APP_CONSTANTS.WIDTH /2) - 10;
     canvas.width = APP_CONSTANTS.WIDTH;
-    canvas.height = APP_CONSTANTS.HEIGHT;
+    canvas.height = APP_CONSTANTS.WIDTH;
     changeFontSize();
     activate(); 
   });
