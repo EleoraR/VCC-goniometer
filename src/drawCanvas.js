@@ -1,25 +1,21 @@
-import {calculateMidPointAngles, getSectorCenter, MATH} from './mathUtils.js';
+import {calculateMidPointAngles, distBetweenTwoPoints, getSectorCenter, MATH} from './mathUtils.js';
 import {AngleState} from './angleState.js'
+import { APP_CONSTANTS  } from './clearStyles.js';
 import './styles.css'; 
 
 export const CONSTANTS = {
-  CIRCLE_RADIUS: 200,
-  SECTOR_RADIUS: 70,
   SLICES: 12,
   CIRCLE_COLOR: '#747474',
   DOT_RADIUS: 5,
   DRAG_RADIUS: 8,
   LINE_WIDTH: 2,
   TEXT_FONT_SIZE: 16,
-  TEXT_COLOR: 'black',
+  DEFAULT_COLOR: 'black',
   LINE_COLOR: '#1e4759',
   SECTOR_COLOR: '#009f964d'
 }
 
-const toDegrees = (rad) => rad * 180 / Math.PI;
-const toRadians = (deg) => deg * Math.PI / 180;
-
-export function drawDistText(ctx, dist, x, y, fontSize = CONSTANTS.TEXT_FONT_SIZE, color = CONSTANTS.TEXT_COLOR) {
+export function drawDistText(ctx, dist, x, y, fontSize = CONSTANTS.TEXT_FONT_SIZE, color = CONSTANTS.DEFAULT_COLOR) {
   ctx.font = `${fontSize}px Arial`;
   ctx.fillStyle = color;
   ctx.textAlign = 'center';
@@ -27,135 +23,84 @@ export function drawDistText(ctx, dist, x, y, fontSize = CONSTANTS.TEXT_FONT_SIZ
   ctx.fillText(`${dist.toFixed(2)}`, x, y);
 }
 
-export function drawAngleText(ctx, angle, x, y, fontSize = CONSTANTS.TEXT_FONT_SIZE, color = CONSTANTS.TEXT_COLOR) {
+export function drawAngleText(ctx, angle, x, y, fontSize = CONSTANTS.TEXT_FONT_SIZE, color = CONSTANTS.DEFAULT_COLOR) {
   ctx.font = `${fontSize}px Arial`;
   ctx.fillStyle = color;
   ctx.textAlign = 'center';
   ctx.textBaseline = 'middle';
-
-  if (AngleState.useDegrees) {
-    ctx.fillText(`${angle.toFixed(1)}°`, x, y);
-  } else {
-    ctx.fillText(`${angle}`, x, y);
-  }
-  
+  let labelAngle = AngleState.format(angle);
+  ctx.fillText(`${labelAngle}`, x, y);
 }
 
-// function drawAngles(ctx, angle) {
-//   if (AngleState.useDegrees) {
-//     const displayAngle = toDegrees(angle);
-//     ctx.fillText(`${displayAngle.toFixed(1)}°`, x, y);
-//   } else {
-//     ctx.fillText(`${angle.toFixed(2)}π`, x, y);
-//   }
-// }
-
-export function drawDot(ctx, x, y, color = CONSTANTS.TEXT_COLOR, radius = CONSTANTS.DOT_RADIUS) {
+export function drawDot(ctx, x, y, radius = CONSTANTS.DOT_RADIUS, color = CONSTANTS.DEFAULT_COLOR) {
   ctx.fillStyle = color;
   ctx.beginPath()
   ctx.arc(x, y, radius, 0, MATH.TWOPI);
   ctx.fill();
-  
 }
 
-export function drawLine(ctx, x1, y1, x2, y2, color = CONSTANTS.LINE_COLOR, lineWidth = CONSTANTS.LINE_WIDTH) {
-  ctx.setLineDash([10, 5]);
+export function drawLine(ctx, x1, y1, x2, y2, dashed = [10, 5], color = CONSTANTS.LINE_COLOR, lineWidth = CONSTANTS.LINE_WIDTH) {
+  // ctx.setLineDash(dashed);
   ctx.strokeStyle = color;
   ctx.lineWidth = lineWidth;
   ctx.beginPath();
   ctx.moveTo(x1, y1);    
   ctx.lineTo(x2, y2);    
   ctx.stroke();
-  ctx.setLineDash([]);          
+  // ctx.setLineDash([]);          
 }
 
-export function midPointArea(ctx, center, first, second, angleDeg, radius = CONSTANTS.SECTOR_RADIUS, fillColor = CONSTANTS.SECTOR_COLOR) {
-
-  const [startAngle, endAngle] = calculateMidPointAngles(center, first, second);
-
+export function drawArc(ctx, x, y, radius, startAngle, endAngle, color, counterclockwise = false) {
   ctx.beginPath();
-  ctx.moveTo(center.x, center.y);   
-  ctx.arc(center.x,center.y,radius,startAngle,endAngle,false);
+  ctx.moveTo(x, y);   
+  ctx.arc(x,y,radius,startAngle,endAngle,counterclockwise);
   ctx.closePath();
-
-  ctx.fillStyle = fillColor;
+  ctx.fillStyle = color;
   ctx.fill();
-
-  const sectorCenPt = getSectorCenter(center, startAngle, endAngle, radius);
-
-  const labelText = toDegrees(angleDeg);
-
-  drawAngleText(ctx, labelText, sectorCenPt.x, sectorCenPt.y);
+  ctx.strokeStyle = '#009f96';
+  ctx.lineWidth = 3;
+  ctx.stroke();    
 }
 
-export function drawUnitCircle(ctx, center, radius = CONSTANTS.CIRCLE_RADIUS, color = CONSTANTS.CIRCLE_COLOR)  {
+export function midPointArea(ctx, center, midFirst, midSecond, angleDeg, radius = APP_CONSTANTS.CIRCLE_RADIUS, fillColor = CONSTANTS.SECTOR_COLOR) {
+  const [startAngle, endAngle] = calculateMidPointAngles(center, midFirst, midSecond);
 
-  let slices = CONSTANTS.SLICES
-  let offset = 20;
+  drawArc(ctx, center.x,center.y,radius,startAngle,endAngle, fillColor);
+  const sectorCenPt = getSectorCenter(center, startAngle, endAngle, radius);
+  drawAngleText(ctx, angleDeg, sectorCenPt.x, sectorCenPt.y);
+}
 
-  // Draw the circle
-  ctx.strokeStyle = 'black';
+function drawCircleOutline(ctx, center, radius, color) {
+  ctx.strokeStyle = color;
   ctx.lineWidth = CONSTANTS.LINE_WIDTH;
   ctx.beginPath();
   ctx.arc(center.x, center.y, radius, 0, MATH.TWOPI);
   ctx.stroke();
+}
 
-  // Draw center point
-  ctx.fillStyle = color;
-  ctx.beginPath();
-  ctx.arc(center.x, center.y, 4, 0, MATH.TWOPI);
-  ctx.fill();
+export function drawUnitCircle(ctx, center, radius = APP_CONSTANTS.CIRCLE_RADIUS, color = CONSTANTS.CIRCLE_COLOR)  {
 
-  //Draw slices
-  ctx.setLineDash([10, 5]);
-  ctx.lineWidth = 1;
+  let slices = CONSTANTS.SLICES
+
+  drawCircleOutline(ctx, center, radius, CONSTANTS.DEFAULT_COLOR);
+
+  drawDot(ctx, center.x, center.y, CONSTANTS.DOT_RADIUS, color);
 
   for (let i = 0; i < slices; i++) {
-    ctx.strokeStyle = color;
-
-    //math func
+   
     const angle = (i * MATH.TWOPI) / slices;
     const step = (MATH.TWOPI) / slices;
     const labelAngle = i * step - Math.PI / 2;
-    let labelText = angle;
 
-    ctx.beginPath();
-    ctx.moveTo(center.x, center.y);
-    ctx.lineTo(center.x + radius * Math.cos(angle), center.y + radius * Math.sin(angle));
+    drawLine(ctx, center.x, center.y, center.x + radius * Math.cos(angle), center.y + radius * Math.sin(angle), [10, 5], color, 1);
     
-    const point = {
+    const labelPoint = {
       x: (center.x + (radius * 0.85) * Math.cos(labelAngle)),
       y: (center.y + (radius * 0.85) * Math.sin(labelAngle))
     }
-
-    if (AngleState.useDegrees) {
-      labelText = toDegrees(angle);
-    } else {
-      labelText = piLabel(i, slices);
-    }
      
-    drawAngleText(ctx, labelText, point.x, point.y);
-    ctx.stroke();
+    drawAngleText(ctx, angle, labelPoint.x, labelPoint.y);
   }
 
-  ctx.setLineDash([]);
-}
-
-
-//make universal
-function piLabel(i, slices) {
-  // angle = 2π * i / slices = π * (2i / slices)
-  let n = 2 * i
-  let d = slices;
-  //computes the greatest common divisor (GCD)
-  const g = (a, b) => (b ? g(b, a % b) : a);
-  const k = g(n, d);
-  n /= k; // n = n/k
-  d /= k; // d = d/k
-  if (n === 0) return "0";
-  //1 = 1pi
-  const num = n === 1 ? "π" : `${n}π`;
-  //if there is a denominator 
-  return d === 1 ? num : `${num}/${d}`;
 }
 
