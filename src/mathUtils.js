@@ -14,8 +14,10 @@ export function calculateGoniometerAngle(center, firstPoint, secondPoint) {
   );
 
   //SMALLEST AMGLE IN RAD
-  let diff = Math.abs(angle2 - angle1) % (2 * Math.PI);
-  let angleRad = diff > Math.PI ? 2 * Math.PI - diff : diff;
+  // let diff = Math.abs(angle2 - angle1) % (2 * Math.PI);
+  // let angleRad = diff > Math.PI ? 2 * Math.PI - diff : diff;
+
+  let angleRad = ((angle2 - angle1) % MATH.TWOPI + MATH.TWOPI) % MATH.TWOPI;
   
   return angleRad;
 }
@@ -95,4 +97,8 @@ export function scalePoints(point, newSize, prevSize) {
     };
   }
 
+}
+
+export function getAcuteAngle(angle) {
+  return angle < Math.PI;
 }

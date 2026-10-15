@@ -89,7 +89,7 @@ export function createElement() {
   for (var i = 0; i < children.length; i++) {
     var child = children[i];
     child.classList.add("goniometer-button");
-    // Do stuff
+
   }
 
   mainDiv.append(container);
