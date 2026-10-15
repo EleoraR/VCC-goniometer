@@ -1,6 +1,6 @@
 import { DRAWER_ID } from "../lib/constants";
 import './styles.css'; 
-import {calculateGoniometerAngle, getMidPoint, getCenter, getMousePos} from './mathUtils.js';
+import {calculateGoniometerAngle, getMidPoint, getCenter, getMousePos, scalePoints} from './mathUtils.js';
 import {drawUnitCircle, drawLine, drawDot, midPointArea, CONSTANTS} from './drawCanvas.js';
 import {AngleState} from './angleState.js'
 import { DragAndMove } from "./DragAndMove";
@@ -187,13 +187,11 @@ function attachCanvasListeners(container, canvas) {
     canvas.height = newHeight;
     changeFontSize();
 
-    if (prevWidth && prevHeight) {
-      const sx = newWidth / prevWidth;   
-      const sy = newHeight / prevHeight;
-      for (const p of points) {          
-        p.x *= sx;
-        p.y *= sy;
-      }
+    const prevSize = [prevWidth, prevHeight];
+    const newSize = [newWidth, newHeight];
+
+    for (var point of points) {
+      scalePoints(point, newSize, prevSize);
     }
 
     activate(); 
@@ -211,7 +209,6 @@ function activate() {
   const center = getCenter(canvas);
 
   drawUnitCircle(ctx, center);
-  // points = initializePoints(canvas);
   draw(ctx, canvas);
 }
 

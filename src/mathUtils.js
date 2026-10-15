@@ -80,3 +80,19 @@ export function getMousePos(e, canvas) {
     y: e.clientY - rect.top
   };
 }
+
+export function scalePoints(point, newSize, prevSize) {
+  const [prevWidth, prevHeight] = prevSize;
+  const [newWidth, newHeight] = newSize;
+
+  if (prevWidth && prevHeight) {
+    const sx = newWidth / prevWidth;   
+    const sy = newHeight / prevHeight;
+
+    return {
+      x: point.x *= sx,
+      y: point.y *= sy
+    };
+  }
+
+}
