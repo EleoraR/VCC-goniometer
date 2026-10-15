@@ -6,6 +6,8 @@ export class Resize {
   private startWidth = 0;
   private startHeight = 0;
   private aspectRatio = 0;
+  private deltaX = 0;
+  private deltaY = 0;
 
   //adjustments for strip-only mode error
   private readonly handleElement: HTMLElement;
@@ -70,13 +72,13 @@ export class Resize {
   private onPointerMove(event: PointerEvent) {
     if (event.pointerId !== this.activePointerId) return;
 
-    const deltaX = event.clientX - this.lastX;
-    const deltaY = event.clientY - this.lastY;
+    this.deltaX = event.clientX - this.lastX;
+    this.deltaY = event.clientY - this.lastY;
 
-    let newWidth = this.startWidth + deltaX;
-    let newHeight = this.startHeight + deltaY;
+    let newWidth = this.startWidth + this.deltaX;
+    let newHeight = this.startHeight + this.deltaY;
 
-    if (Math.abs(deltaX) > Math.abs(deltaY)) {
+    if (Math.abs(this.deltaX) > Math.abs(this.deltaY)) {
         // Width is the dominant driver; calculate height based on it
         newHeight = newWidth / this.aspectRatio;
     } else {
@@ -101,5 +103,6 @@ export class Resize {
     this.documentContext.removeEventListener("pointermove", this.onPointerMove);
     this.documentContext.removeEventListener("pointerup", this.onPointerUp);
     this.documentContext.removeEventListener("pointercancel", this.onPointerUp);
+
   }
 }

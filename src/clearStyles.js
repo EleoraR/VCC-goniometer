@@ -174,10 +174,28 @@ function attachCanvasListeners(container, canvas) {
 
   const ro = new ResizeObserver(entries => {
     const { width, height } = entries[0].contentRect;
+    const prevWidth = canvas.width;
+    const prevHeight = canvas.height;
+
     updateConstants(width, height);
-    canvas.width = APP_CONSTANTS.CANVAS_WIDTH;
-    canvas.height = APP_CONSTANTS.CANVAS_HEIGHT;
+    const newWidth = APP_CONSTANTS.CANVAS_WIDTH;
+    const newHeight = APP_CONSTANTS.CANVAS_HEIGHT;
+
+    if (newWidth === prevWidth && newHeight === prevHeight) return;
+
+    canvas.width = newWidth;
+    canvas.height = newHeight;
     changeFontSize();
+
+    if (prevWidth && prevHeight) {
+      const sx = newWidth / prevWidth;   
+      const sy = newHeight / prevHeight;
+      for (const p of points) {          
+        p.x *= sx;
+        p.y *= sy;
+      }
+    }
+
     activate(); 
   });
   ro.observe(container);
