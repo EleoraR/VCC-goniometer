@@ -65,7 +65,7 @@ export function createElement() {
 
   container.classList.add('goniometer-container');
   gonioMeter.classList.add('goniometer-title');
-  buttons.classList.add("goniometer-button");
+  // buttons.classList.add("goniometer-button");
 
   container.id = "goniometer-panel";
   dragHandle.id = "goniometer-handle";
@@ -81,8 +81,17 @@ export function createElement() {
   container.style.width = `${APP_CONSTANTS.WIDTH}px`;
   container.style.height = `${APP_CONSTANTS.HEIGHT}px`;
 
-  gonioMeter.append(buttons);
-  buttons.append(dragHandle, convertDegButton, copyButton, resetButton, closeButton);
+  // gonioMeter.append(buttons);
+  gonioMeter.append(dragHandle, convertDegButton, copyButton, resetButton, closeButton);
+  
+  var children = gonioMeter.children;
+
+  for (var i = 0; i < children.length; i++) {
+    var child = children[i];
+    child.classList.add("goniometer-button");
+    // Do stuff
+  }
+
   mainDiv.append(container);
   container.append(gonioMeter, canvas, resizeHandle);
 

@@ -9,11 +9,6 @@
 }
 
 #goniometer-handle {
-    padding: 0 0.5rem;
-    vertical-align: middle;
-    text-align: center;
-    font-size: 1rem;
-    font-weight: 400;
     user-select: none;
 
     &::after {
@@ -43,26 +38,31 @@
 .goniometer-title {
     position: relative;
     color: black;
-    padding: 0.5rem;
+    padding: 1rem 0.5rem;
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: flex-start;
+    align-content: center;
+    gap: 0.25rem;
 }
 
 .goniometer-button {
-    z-index: 9999;
     padding: 0.5rem 1rem;
     background: none;
     color: black;
-    border: none;
+    border: 1px solid black;
     border-radius: 8px;
     cursor: pointer;
-    position: relative;
-    width: stretch;
-    display: flex;
-    flex-direction: row;
-    justify-content: space-between;
-    align-items: center;
+    font-size: 1rem;
+    font-weight: 400;
+    vertical-align: middle;
+    text-align: center;
+    width: auto;
+    height: auto;
 
-    button:hover {
-        color: var(--teal);
+    &:hover {
+        background: var(--lighter-teal);
     }
 }
 
