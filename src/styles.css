@@ -62,12 +62,17 @@
 
     &:hover {
         color: var(--lighter-teal);
+        cursor: pointer;
     }
 }
 
 #copy-btn::after {
     content: '\f24d';
     font-family: 'FontAwesome';
+}
+
+#copy-btn:hover {
+    cursor: copy;
 }
 
 #reset-btn::after {
@@ -83,7 +88,7 @@
 #resize-btn {
     width: 1rem;
     height: 1rem;
-    color: white;
+    color: black;
     position: absolute;
     right: 10px;
     bottom: 10px;

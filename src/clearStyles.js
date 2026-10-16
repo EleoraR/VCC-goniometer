@@ -166,12 +166,22 @@ function attachButtonListeners(canvas, copyButton, resetButton, closeButton, con
     diffButtonAction(e, center, first, second);
   });
 
+  diffButton.addEventListener('mouseover', (e) => {
+    if (startAngle && endAngle) {
+      diffButton.style.cursor = "copy";
+    } else {
+      diffButton.style.cursor = "pointer";
+    }
+
+  });
+
 }
 
 function diffButtonAction(e, center, first, second) {
   const diffButton = e.target;
 
   if (startAngle && endAngle) {
+    copyToClipboard(diffButton.textContent);
     diffButton.textContent = "-";
     startAngle = null;
     endAngle = null;
