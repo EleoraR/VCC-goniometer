@@ -13,10 +13,6 @@ export function calculateGoniometerAngle(center, firstPoint, secondPoint) {
     secondPoint.x - center.x
   );
 
-  //SMALLEST AMGLE IN RAD
-  // let diff = Math.abs(angle2 - angle1) % (2 * Math.PI);
-  // let angleRad = diff > Math.PI ? 2 * Math.PI - diff : diff;
-
   let angleRad = ((angle2 - angle1) % MATH.TWOPI + MATH.TWOPI) % MATH.TWOPI;
   
   return angleRad;

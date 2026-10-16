@@ -6,6 +6,20 @@ import {AngleState} from './angleState.js'
 import { DragAndMove } from "./DragAndMove";
 import { Resize } from "./Resize.js";
 
+export const APP_CONSTANTS = {
+  WIDTH: 480,
+  HEIGHT: 480,
+  CANVAS_WIDTH: 420,
+  CANVAS_HEIGHT: 420,
+  CIRCLE_RADIUS: 200
+}
+
+let selectedPoint = null;
+let points = null;
+let angleDeg = null;
+let startAngle = null;
+let endAngle = null;
+
 export function clearStyles(id) {
 const el = document.getElementById(id);
   if (!el) {
@@ -26,46 +40,24 @@ const el = document.getElementById(id);
   return el;    
 }
 
-export const APP_CONSTANTS = {
-  WIDTH: 480,
-  HEIGHT: 480,
-  CANVAS_WIDTH: 420,
-  CANVAS_HEIGHT: 420,
-  CIRCLE_RADIUS: 200
-}
-
-let selectedPoint = null;
-let points = null;
-let angleDeg = null;
-
-window.addEventListener('mouseup', () => {
-  selectedPoint = null;
-});
-
 export function createElement() {
   const mainDiv = document.getElementById(DRAWER_ID);
   const container = document.createElement('div');
   const gonioMeter = document.createElement('div');
   const dragHandle = document.createElement('div');
-  
   const copyButton = document.createElement('button');
   const resetButton = document.createElement('button');
   const closeButton = document.createElement('button');
   const convertDegButton = document.createElement('button');
-  const buttons = document.createElement('div');
+  const diffButton = document.createElement('button');
   const canvas = document.createElement('canvas');
-
   const resizeHandle = document.createElement('div');
   const resizeIcon1 = document.createElement('i');
   const resizeIcon2 = document.createElement('i');
-  resizeIcon1.id = "resize-icon-1";
-  resizeIcon2.classList.add("icon", "icon-link");
-  resizeIcon1.append(resizeIcon2);
-  resizeHandle.append(resizeIcon1);
 
   container.classList.add('goniometer-container');
   gonioMeter.classList.add('goniometer-title');
-  // buttons.classList.add("goniometer-button");
+  resizeIcon2.classList.add("icon", "icon-link");
 
   container.id = "goniometer-panel";
   dragHandle.id = "goniometer-handle";
@@ -75,14 +67,17 @@ export function createElement() {
   convertDegButton.id = "deg-btn";
   resizeHandle.id = "resize-btn";
   canvas.id = "goniometer-canvas";
+  resizeIcon1.id = "resize-icon-1";
+  diffButton.id = "diff-btn";
 
-  convertDegButton.textContent = "degrees";
+  convertDegButton.textContent = "";
+  diffButton.textContent = "-";
 
   container.style.width = `${APP_CONSTANTS.WIDTH}px`;
   container.style.height = `${APP_CONSTANTS.HEIGHT}px`;
 
-  // gonioMeter.append(buttons);
-  gonioMeter.append(dragHandle, convertDegButton, copyButton, resetButton, closeButton);
+
+  gonioMeter.append(dragHandle, convertDegButton, copyButton, resetButton, diffButton, closeButton);
   
   var children = gonioMeter.children;
 
@@ -92,15 +87,27 @@ export function createElement() {
 
   }
 
+  resizeIcon1.append(resizeIcon2);
+  resizeHandle.append(resizeIcon1);
+
   mainDiv.append(container);
   container.append(gonioMeter, canvas, resizeHandle);
 
   points = initializePoints(canvas);
   attachCanvasListeners(container, canvas);
-  attachButtonListeners(canvas, copyButton, resetButton, closeButton, convertDegButton, resizeHandle);
+  attachButtonListeners(canvas, copyButton, resetButton, closeButton, convertDegButton, diffButton);
   activateDrag();
   activateResize();
 }
+
+export function showHideElement(elementId, showHide) {
+    const el = document.getElementById(elementId);
+    el.style.display = showHide ? 'block' : 'none';
+}
+
+window.addEventListener('mouseup', () => {
+  selectedPoint = null;
+});
 
 function updateConstants(width, height) {
   if (width == 0 || height == 0) return;
@@ -131,7 +138,7 @@ function activateResize() {
   }
 }
 
-function attachButtonListeners(canvas, copyButton, resetButton, closeButton, convertDegButton) {
+function attachButtonListeners(canvas, copyButton, resetButton, closeButton, convertDegButton, diffButton) {
   copyButton.addEventListener('click', (e) => {
     if (angleDeg){
       var copyText = AngleState.format(angleDeg);
@@ -152,6 +159,35 @@ function attachButtonListeners(canvas, copyButton, resetButton, closeButton, con
     AngleState.useDegrees = !AngleState.useDegrees;
     activate();
   });
+
+  diffButton.addEventListener('click', (e) => {
+    const [first, second] = points;
+    const center = getCenter(canvas);
+    diffButtonAction(e, center, first, second);
+  });
+
+}
+
+function diffButtonAction(e, center, first, second) {
+  const diffButton = e.target;
+
+  if (startAngle && endAngle) {
+    diffButton.textContent = "-";
+    startAngle = null;
+    endAngle = null;
+    return;
+  }
+
+  if (!startAngle) {
+    startAngle = calculateGoniometerAngle(center, first, second);
+    diffButton.textContent = "=";
+
+  } else {
+
+    endAngle = calculateGoniometerAngle(center, first, second);
+    let diff = (startAngle - endAngle) > 0 ? startAngle - endAngle : endAngle - startAngle;
+    diffButton.textContent = `${AngleState.format(diff)}`;
+  }
 }
 
 function copyToClipboard(text) {
@@ -243,9 +279,4 @@ function initializePoints(canvas) {
     { x: center.x - APP_CONSTANTS.CIRCLE_RADIUS, y: center.y, radius: APP_CONSTANTS.CIRCLE_RADIUS },
     { x: center.x + APP_CONSTANTS.CIRCLE_RADIUS, y: center.y, radius: APP_CONSTANTS.CIRCLE_RADIUS }
   ];
-}
-
-export function showHideElement(elementId, showHide) {
-    const el = document.getElementById(elementId);
-    el.style.display = showHide ? 'block' : 'none';
 }
