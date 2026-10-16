@@ -38,7 +38,7 @@
 .goniometer-title {
     position: relative;
     color: black;
-    padding: 1rem 0.5rem;
+    padding: 0.5rem;
     display: flex;
     flex-direction: row;
     flex-wrap: wrap;
@@ -51,7 +51,6 @@
     padding: 0.5rem 1rem;
     background: none;
     color: black;
-    border: 1px solid black;
     border-radius: 8px;
     cursor: pointer;
     font-size: 1rem;
@@ -62,7 +61,7 @@
     height: auto;
 
     &:hover {
-        background: var(--lighter-teal);
+        color: var(--lighter-teal);
     }
 }
 
