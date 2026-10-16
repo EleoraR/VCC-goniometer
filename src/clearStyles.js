@@ -1,7 +1,7 @@
 import { DRAWER_ID } from "../lib/constants";
 import './styles.css'; 
 import {calculateGoniometerAngle, getMidPoint, getCenter, getMousePos, scalePoints} from './mathUtils.js';
-import {drawUnitCircle, drawLine, drawDot, midPointArea, CONSTANTS} from './drawCanvas.js';
+import {drawUnitCircle, midPointArea, CONSTANTS} from './drawCanvas.js';
 import {AngleState} from './angleState.js'
 import { DragAndMove } from "./DragAndMove";
 import { Resize } from "./Resize.js";
@@ -45,6 +45,7 @@ export function createElement() {
   const container = document.createElement('div');
   const gonioMeter = document.createElement('div');
   const dragHandle = document.createElement('div');
+  const buttonCont = document.createElement('div');
   const copyButton = document.createElement('button');
   const resetButton = document.createElement('button');
   const closeButton = document.createElement('button');
@@ -71,21 +72,24 @@ export function createElement() {
   diffButton.id = "diff-btn";
 
   convertDegButton.textContent = "";
-  diffButton.textContent = "-";
+  diffButton.textContent = "diff";
 
   container.style.width = `${APP_CONSTANTS.WIDTH}px`;
   container.style.height = `${APP_CONSTANTS.HEIGHT}px`;
 
-
-  gonioMeter.append(dragHandle, convertDegButton, copyButton, resetButton, diffButton, closeButton);
+  buttonCont.append(convertDegButton, copyButton, resetButton, diffButton);
+  gonioMeter.append(dragHandle, buttonCont, closeButton);
   
-  var children = gonioMeter.children;
+  var children = buttonCont.children;
 
   for (var i = 0; i < children.length; i++) {
     var child = children[i];
     child.classList.add("goniometer-button");
 
   }
+  
+  dragHandle.classList.add("goniometer-button");
+  closeButton.classList.add("goniometer-button");
 
   resizeIcon1.append(resizeIcon2);
   resizeHandle.append(resizeIcon1);
@@ -182,7 +186,7 @@ function diffButtonAction(e, center, first, second) {
 
   if (startAngle && endAngle) {
     copyToClipboard(diffButton.textContent);
-    diffButton.textContent = "-";
+    diffButton.textContent = "diff";
     startAngle = null;
     endAngle = null;
     return;
