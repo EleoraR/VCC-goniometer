@@ -39,7 +39,7 @@ export function drawDot(ctx, x, y, radius = CONSTANTS.DOT_RADIUS, color = CONSTA
   ctx.fill();
 }
 
-export function drawLine(ctx, x1, y1, x2, y2, dashed = [10, 5], color = CONSTANTS.LINE_COLOR, lineWidth = CONSTANTS.LINE_WIDTH) {
+export function drawLine(ctx, x1, y1, x2, y2, color = CONSTANTS.LINE_COLOR, lineWidth = CONSTANTS.LINE_WIDTH) {
   // ctx.setLineDash(dashed);
   ctx.strokeStyle = color;
   ctx.lineWidth = lineWidth;
@@ -58,7 +58,7 @@ export function drawArc(ctx, x, y, radius, startAngle, endAngle, color, counterc
   ctx.fillStyle = color;
   ctx.fill();
   ctx.strokeStyle = '#009f96';
-  ctx.lineWidth = 3;
+  ctx.lineWidth = 5;
   ctx.stroke();    
 }
 
@@ -80,27 +80,33 @@ function drawCircleOutline(ctx, center, radius, color) {
 
 export function drawUnitCircle(ctx, center, radius = APP_CONSTANTS.CIRCLE_RADIUS, color = CONSTANTS.CIRCLE_COLOR)  {
 
-  let slices = CONSTANTS.SLICES
-
   drawCircleOutline(ctx, center, radius, CONSTANTS.DEFAULT_COLOR);
 
   drawDot(ctx, center.x, center.y, CONSTANTS.DOT_RADIUS, color);
 
+  drawPizza(ctx, center, radius, color, CONSTANTS.SLICES);
+
+}
+
+function drawPizza(ctx, center, radius, color, slices) {
   for (let i = 0; i < slices; i++) {
    
     const angle = (i * MATH.TWOPI) / slices;
     const step = (MATH.TWOPI) / slices;
     const labelAngle = i * step - Math.PI / 2;
 
-    drawLine(ctx, center.x, center.y, center.x + radius * Math.cos(angle), center.y + radius * Math.sin(angle), [10, 5], color, 1);
+    drawLine(ctx, center.x, center.y, center.x + radius * Math.cos(angle), center.y + radius * Math.sin(angle), color, 1);
     
-    const labelPoint = {
-      x: (center.x + (radius * 0.85) * Math.cos(labelAngle)),
-      y: (center.y + (radius * 0.85) * Math.sin(labelAngle))
-    }
-     
-    drawAngleText(ctx, angle, labelPoint.x, labelPoint.y);
+    drawLabel(ctx, center, radius, angle, labelAngle);
+    
   }
-
 }
 
+function drawLabel(ctx, center, radius, angle, labelAngle) {
+  const labelPoint = {
+    x: center.x + radius * 0.85 * Math.cos(labelAngle),
+    y: center.y + radius * 0.85 * Math.sin(labelAngle)
+  }
+    
+  drawAngleText(ctx, angle, labelPoint.x, labelPoint.y);
+}

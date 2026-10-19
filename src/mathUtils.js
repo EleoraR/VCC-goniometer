@@ -1,5 +1,6 @@
 export const MATH = {
-  TWOPI: Math.PI * 2
+  TWOPI: Math.PI * 2,
+  HALFPI: Math.PI/2
 }
 
 export function calculateGoniometerAngle(center, firstPoint, secondPoint) {
