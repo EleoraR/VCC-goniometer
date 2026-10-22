@@ -40,14 +40,12 @@ export function drawDot(ctx, x, y, radius = CONSTANTS.DOT_RADIUS, color = CONSTA
 }
 
 export function drawLine(ctx, x1, y1, x2, y2, color = CONSTANTS.LINE_COLOR, lineWidth = CONSTANTS.LINE_WIDTH) {
-  // ctx.setLineDash(dashed);
   ctx.strokeStyle = color;
   ctx.lineWidth = lineWidth;
   ctx.beginPath();
   ctx.moveTo(x1, y1);    
   ctx.lineTo(x2, y2);    
-  ctx.stroke();
-  // ctx.setLineDash([]);          
+  ctx.stroke();       
 }
 
 export function drawArc(ctx, x, y, radius, startAngle, endAngle, color, counterclockwise = false) {
@@ -84,18 +82,28 @@ export function drawUnitCircle(ctx, center, radius = APP_CONSTANTS.CIRCLE_RADIUS
 
   drawDot(ctx, center.x, center.y, CONSTANTS.DOT_RADIUS, color);
 
-  drawPizza(ctx, center, radius, color, CONSTANTS.SLICES);
+  drawPizza(ctx, center);
+
+  drawPizzaLabels(ctx, center);
 
 }
 
-function drawPizza(ctx, center, radius, color, slices) {
+function drawPizza(ctx, center, radius = APP_CONSTANTS.CIRCLE_RADIUS, color = CONSTANTS.CIRCLE_COLOR, slices = CONSTANTS.SLICES) {
   for (let i = 0; i < slices; i++) {
    
     const angle = (i * MATH.TWOPI) / slices;
-    const step = (MATH.TWOPI) / slices;
-    const labelAngle = i * step - Math.PI / 2;
+    drawLine(ctx, center.x, center.y, center.x + radius * Math.cos(angle), center.y + radius * Math.sin(angle), color, 1);    
+  }
+}
 
-    drawLine(ctx, center.x, center.y, center.x + radius * Math.cos(angle), center.y + radius * Math.sin(angle), color, 1);
+export function drawPizzaLabels(ctx, center, radius = APP_CONSTANTS.CIRCLE_RADIUS, slices = CONSTANTS.SLICES) {
+  const step = (MATH.TWOPI) / slices;
+  for (let i = 0; i < slices; i++) {
+    
+    const angle = (i * MATH.TWOPI) / slices;
+    
+    const labelAngle = i * step - Math.PI / 2 + AngleState.direction;
+
     
     drawLabel(ctx, center, radius, angle, labelAngle);
     

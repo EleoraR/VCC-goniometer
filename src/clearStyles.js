@@ -1,8 +1,8 @@
 import { DRAWER_ID } from "../lib/constants";
 import './styles.css'; 
-import {calculateGoniometerAngle, getMidPoint, getCenter, getMousePos, scalePoints, MATH} from './mathUtils.js';
-import {drawUnitCircle, midPointArea, CONSTANTS} from './drawCanvas.js';
-import { copyToClipboard, changeFontSize, initializePoints, diffButtonAction, updateConstants } from './helper.js';
+import { calculateGoniometerAngle, getMidPoint, getMousePos, scalePoints } from './mathUtils.js';
+import { drawPizzaLabels, drawUnitCircle, midPointArea } from './drawCanvas.js';
+import { copyToClipboard, changeFontSize, initializePoints, diffButtonAction, updateConstants, getCenter } from './helper.js';
 import {AngleState} from './angleState.js'
 import { DragAndMove } from "./DragAndMove";
 import { Resize } from "./Resize.js";
@@ -145,7 +145,7 @@ function attachButtonListeners(canvas, copyButton, resetButton, closeButton, con
 
   resetButton.addEventListener('click', (e) => {
     points = initializePoints(canvas);
-    activate();
+    draw();
   });
 
   closeButton.addEventListener('click', (e) => {
@@ -154,41 +154,23 @@ function attachButtonListeners(canvas, copyButton, resetButton, closeButton, con
 
   convertDegButton.addEventListener('click', (e) => {
     AngleState.useDegrees = !AngleState.useDegrees;
-    activate();
+    draw();
   });
 
   diffButton.addEventListener('click', (e) => {
     const [first, second] = points;
-    const center = getCenter(canvas);
+    const center = getCenter();
     diffButtonAction(e, center, first, second);
   });
 
-  diffButton.addEventListener('mouseover', (e) => {
-    if (startAngle && endAngle) {
-      diffButton.style.cursor = "copy";
-    } else {
-      diffButton.style.cursor = "pointer";
-    }
-
-  });
-
-  let angle = 0;
   rotateButton.addEventListener('click', (e) => {
-    angle = (angle + 90) % 360;
+    AngleState.rotate90();
     const ctx = canvas.getContext('2d');
-    rotate(ctx, canvas, angle);
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    draw();
     
   });
 
-}
-
-function rotate(ctx, canvas, angle) {
-  // ctx.clearRect(0, 0, canvas.width, canvas.height);
-  // ctx.save();
-  // ctx.translate(canvas.width / 2, canvas.height / 2);
-  // ctx.rotate((angle * Math.PI) / 180);
-  // activate();
-  // ctx.restore();
 }
 
 function attachCanvasListeners(container, canvas) {
@@ -205,7 +187,7 @@ function attachCanvasListeners(container, canvas) {
     const pos = getMousePos(e, canvas);
     selectedPoint.x = pos.x;
     selectedPoint.y = pos.y;
-    draw(ctx, canvas);
+    draw();
   });
 
   const ro = new ResizeObserver(entries => {
@@ -230,33 +212,29 @@ function attachCanvasListeners(container, canvas) {
       scalePoints(point, newSize, prevSize);
     }
 
-    activate(); 
+    draw(); 
   });
   ro.observe(container);
 }
 
-function activate() {
-  const stateBtn = document.getElementById('deg-btn');
-  stateBtn.textContent = AngleState.text();
+function draw() {
 
+  if (!points)  {
+    points = initializePoints();
+  }
+
+  const stateBtn = document.getElementById('deg-btn');
   const canvas = document.getElementById('goniometer-canvas');
   const ctx = canvas.getContext('2d');
-  const center = getCenter(canvas);
+  const center = getCenter();
 
-  drawUnitCircle(ctx, center);
-  draw(ctx, canvas);
-}
-
-function draw(ctx, canvas) {
-
-  if (!points) return;
-
-  const center = getCenter(canvas);
   const [first, second] = points;
+
+  stateBtn.textContent = AngleState.text();
+
   ctx.clearRect(0, 0, canvas.width, canvas.height);
 
   drawUnitCircle(ctx, center);
 
-  angleDeg = calculateGoniometerAngle(center, first, second);
-  midPointArea(ctx, center, getMidPoint(center, first), getMidPoint(center, second), angleDeg);
+  midPointArea(ctx, center, getMidPoint(center, first), getMidPoint(center, second), calculateGoniometerAngle(center, first, second));
 }

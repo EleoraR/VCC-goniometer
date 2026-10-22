@@ -1,6 +1,6 @@
 import { APP_CONSTANTS } from "./clearStyles";
 import { CONSTANTS } from "./drawCanvas";
-import { calculateGoniometerAngle, getCenter } from "./mathUtils";
+import { calculateGoniometerAngle } from "./mathUtils";
 import {AngleState} from './angleState.js'
 
 let startAngle = null;
@@ -24,6 +24,13 @@ export function initializePoints(canvas) {
     { x: center.x - APP_CONSTANTS.CIRCLE_RADIUS, y: center.y, radius: APP_CONSTANTS.CIRCLE_RADIUS },
     { x: center.x + APP_CONSTANTS.CIRCLE_RADIUS, y: center.y, radius: APP_CONSTANTS.CIRCLE_RADIUS }
   ];
+}
+
+export function getCenter() {
+  return {
+    x: APP_CONSTANTS.CANVAS_WIDTH / 2,
+    y: APP_CONSTANTS.CANVAS_HEIGHT / 2
+  };
 }
 
 export function diffButtonAction(e, center, first, second) {

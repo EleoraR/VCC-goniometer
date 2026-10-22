@@ -63,13 +63,6 @@ export function distBetweenTwoPoints(point1, point2) {
   return Math.sqrt(dx * dx + dy * dy);
 }
 
-export function getCenter(canvas) {
-  return {
-    x: canvas.width / 2,
-    y: canvas.height / 2
-  };
-}
-
 export function getMousePos(e, canvas) {
   if (!canvas) return;
   const rect = canvas.getBoundingClientRect();
