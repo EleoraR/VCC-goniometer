@@ -72,12 +72,12 @@ export function createElement() {
   diffButton.id = "diff-btn";
   rotateButton.id = "rotate-btn";
 
-  convertDegButton.textContent = "";
   diffButton.textContent = "diff";
-  rotateButton.textContent = "ro";
 
   container.style.width = `${APP_CONSTANTS.WIDTH}px`;
   container.style.height = `${APP_CONSTANTS.HEIGHT}px`;
+  canvas.style.width = '410px';
+  canvas.style.height = '410px'; //bug
 
   buttonCont.append(convertDegButton, copyButton, resetButton, diffButton);
   gonioMeter.append(dragHandle, buttonCont, closeButton);
@@ -99,7 +99,8 @@ export function createElement() {
   mainDiv.append(container);
   container.append(gonioMeter, canvas, rotateButton, resizeHandle);
 
-  points = initializePoints(canvas);
+  points = initializePoints();
+  console.log(points);
   attachCanvasListeners(container, canvas);
   attachButtonListeners(canvas, copyButton, resetButton, closeButton, convertDegButton, diffButton, rotateButton);
   activateDrag();
@@ -107,6 +108,7 @@ export function createElement() {
 }
 
 export function showHideElement(elementId, showHide) {
+    // points = initializePoints();
     const el = document.getElementById(elementId);
     el.style.display = showHide ? 'block' : 'none';
 }
@@ -144,7 +146,7 @@ function attachButtonListeners(canvas, copyButton, resetButton, closeButton, con
   });
 
   resetButton.addEventListener('click', (e) => {
-    points = initializePoints(canvas);
+    points = initializePoints(); // works
     draw();
   });
 
@@ -159,8 +161,7 @@ function attachButtonListeners(canvas, copyButton, resetButton, closeButton, con
 
   diffButton.addEventListener('click', (e) => {
     const [first, second] = points;
-    const center = getCenter();
-    diffButtonAction(e, center, first, second);
+    diffButtonAction(e, first, second);
   });
 
   rotateButton.addEventListener('click', (e) => {
@@ -179,9 +180,11 @@ function attachCanvasListeners(container, canvas) {
     if (!points) return;
     const pos = getMousePos(e, canvas);
     selectedPoint = points.find(p => Math.hypot(p.x - pos.x, p.y - pos.y) < p.radius);
+    
   });
 
   canvas.addEventListener('mousemove', (e) => {
+    // console.log(selectedPoint); selected point is null
     if (!selectedPoint ) return;
     const ctx = canvas.getContext('2d');
     const pos = getMousePos(e, canvas);
@@ -219,9 +222,7 @@ function attachCanvasListeners(container, canvas) {
 
 function draw() {
 
-  if (!points)  {
-    points = initializePoints();
-  }
+  if (!points) return;
 
   const stateBtn = document.getElementById('deg-btn');
   const canvas = document.getElementById('goniometer-canvas');

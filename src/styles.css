@@ -27,12 +27,16 @@
     background-color: #f2f2f24d;
     overflow: hidden;
     display: block;
+    min-width: 300px;
+    max-width: 850px;
 }
 #goniometer-canvas {
     z-index: 1000;
     position: relative;
     display: block;
     margin: auto;
+    width: 420px;
+    height: 420px;
 }
 
 .goniometer-title {
@@ -93,6 +97,12 @@
     bottom: 10px;
     font-size: 12px;
     z-index: 9999;
+    margin: 0.5rem 1rem;
+
+    &::after {
+        content: '\f01e';
+        font-family: 'FontAwesome';
+    }
 }
 
 #resize-btn {
@@ -104,6 +114,7 @@
     bottom: 10px;
     font-size: 12px;
     z-index: 9999;
+    margin: 0.5rem 1rem;
 }
 
 #resize-icon-1 {

@@ -73,13 +73,17 @@ export function getMousePos(e, canvas) {
   };
 }
 
-export function scalePoints(point, newSize, prevSize) {
-  const [prevWidth, prevHeight] = prevSize;
+export function scalePoints(point, newSize, prevSize) { 
+  console.log("scaling");
+  const [prevWidth, prevHeight] = prevSize; // on open prev size is [300, 150] // is scaling on open // points are off the page (untouchable)
   const [newWidth, newHeight] = newSize;
+  console.log(prevSize, newSize);
 
   if (prevWidth && prevHeight) {
     const sx = newWidth / prevWidth;   
     const sy = newHeight / prevHeight;
+
+    console.log(point.x * sx, point.y * sy);
 
     return {
       x: point.x *= sx,

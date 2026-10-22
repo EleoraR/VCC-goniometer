@@ -16,9 +16,12 @@ export function changeFontSize(width = APP_CONSTANTS.WIDTH, height = APP_CONSTAN
   CONSTANTS.TEXT_FONT_SIZE = fontSize;
 }
 
-export function initializePoints(canvas) {
+export function initializePoints() {
 
-  const center = getCenter(canvas);
+  const center = getCenter();
+
+  console.log(center.x - APP_CONSTANTS.CIRCLE_RADIUS, center.y);
+  console.log(center.x + APP_CONSTANTS.CIRCLE_RADIUS, center.y);
 
   return [
     { x: center.x - APP_CONSTANTS.CIRCLE_RADIUS, y: center.y, radius: APP_CONSTANTS.CIRCLE_RADIUS },
@@ -33,8 +36,9 @@ export function getCenter() {
   };
 }
 
-export function diffButtonAction(e, center, first, second) {
+export function diffButtonAction(e, first, second) {
   const diffButton = e.target;
+  const center = getCenter();
 
   if (startAngle && endAngle) {
     copyToClipboard(diffButton.textContent);
