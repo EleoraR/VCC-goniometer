@@ -35,8 +35,8 @@
     position: relative;
     display: block;
     margin: auto;
-    width: 420px;
-    height: 420px;
+    /* width: 420px;
+    height: 420px; */
 }
 
 .goniometer-title {

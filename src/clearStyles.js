@@ -76,8 +76,8 @@ export function createElement() {
 
   container.style.width = `${APP_CONSTANTS.WIDTH}px`;
   container.style.height = `${APP_CONSTANTS.HEIGHT}px`;
-  canvas.style.width = '410px';
-  canvas.style.height = '410px'; //bug
+  canvas.width = `${APP_CONSTANTS.CANVAS_WIDTH}px`;
+  canvas.height = `${APP_CONSTANTS.CANVAS_HEIGHT}px`;
 
   buttonCont.append(convertDegButton, copyButton, resetButton, diffButton);
   gonioMeter.append(dragHandle, buttonCont, closeButton);
@@ -87,7 +87,6 @@ export function createElement() {
   for (var i = 0; i < children.length; i++) {
     var child = children[i];
     child.classList.add("goniometer-button");
-
   }
   
   dragHandle.classList.add("goniometer-button");
@@ -99,8 +98,6 @@ export function createElement() {
   mainDiv.append(container);
   container.append(gonioMeter, canvas, rotateButton, resizeHandle);
 
-  points = initializePoints();
-  console.log(points);
   attachCanvasListeners(container, canvas);
   attachButtonListeners(canvas, copyButton, resetButton, closeButton, convertDegButton, diffButton, rotateButton);
   activateDrag();
@@ -108,7 +105,7 @@ export function createElement() {
 }
 
 export function showHideElement(elementId, showHide) {
-    // points = initializePoints();
+    points = initializePoints();
     const el = document.getElementById(elementId);
     el.style.display = showHide ? 'block' : 'none';
 }
@@ -193,8 +190,9 @@ function attachCanvasListeners(container, canvas) {
     draw();
   });
 
-  const ro = new ResizeObserver(entries => {
+  const ro = new ResizeObserver(entries => {    
     const { width, height } = entries[0].contentRect;
+   
     const prevWidth = canvas.width;
     const prevHeight = canvas.height;
 
@@ -202,7 +200,7 @@ function attachCanvasListeners(container, canvas) {
     const newWidth = APP_CONSTANTS.CANVAS_WIDTH;
     const newHeight = APP_CONSTANTS.CANVAS_HEIGHT;
 
-    if (newWidth === prevWidth && newHeight === prevHeight) return;
+    if (newWidth == prevWidth || newHeight == prevHeight) return;
 
     canvas.width = newWidth;
     canvas.height = newHeight;

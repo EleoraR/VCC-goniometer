@@ -20,8 +20,8 @@ export function initializePoints() {
 
   const center = getCenter();
 
-  console.log(center.x - APP_CONSTANTS.CIRCLE_RADIUS, center.y);
-  console.log(center.x + APP_CONSTANTS.CIRCLE_RADIUS, center.y);
+  console.log("INITIALISE1", center.x - APP_CONSTANTS.CIRCLE_RADIUS, center.y);
+  console.log("INITIALISE2", center.x + APP_CONSTANTS.CIRCLE_RADIUS, center.y);
 
   return [
     { x: center.x - APP_CONSTANTS.CIRCLE_RADIUS, y: center.y, radius: APP_CONSTANTS.CIRCLE_RADIUS },
