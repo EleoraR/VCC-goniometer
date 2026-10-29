@@ -49,14 +49,19 @@ export function createElement() {
   const convertDegButton = document.createElement('button');
   const diffButton = document.createElement('button');
   const rotateButton = document.createElement('button');
+  const settingsButton = document.createElement('button');
+  const dropdown = document.createElement('div');
   const canvas = document.createElement('canvas');
   const resizeHandle = document.createElement('div');
   const resizeIcon1 = document.createElement('i');
   const resizeIcon2 = document.createElement('i');
 
+  dropdown.append(settingsButton, buttonCont);
+
   container.classList.add('goniometer-container');
   gonioMeter.classList.add('goniometer-title');
   gonioMeter.id = "goniometer-handle";
+  dropdown.id = "settings-dropdown";
   resizeIcon2.classList.add("icon", "icon-link");
 
   container.id = "goniometer-panel";
@@ -69,8 +74,11 @@ export function createElement() {
   resizeIcon1.id = "resize-icon-1";
   diffButton.id = "diff-btn";
   rotateButton.id = "rotate-btn";
+  settingsButton.id = "settings-btn";
 
   diffButton.textContent = "SUBTRACT";
+  resetButton.textContent = "RESET";
+  rotateButton.textContent = "ROTATE";
 
   container.style.width = `${APP_CONSTANTS.WIDTH}px`;
   container.style.height = `${APP_CONSTANTS.HEIGHT}px`;
@@ -78,16 +86,12 @@ export function createElement() {
   canvas.height = `${APP_CONSTANTS.CANVAS_HEIGHT}px`;
 
   buttonCont.append(convertDegButton, copyButton, resetButton, diffButton, rotateButton);
-  gonioMeter.append(buttonCont, closeButton);
-  
-  var children = buttonCont.children;
+  gonioMeter.append(dropdown, closeButton);
 
-  for (var i = 0; i < children.length; i++) {
-    var child = children[i];
-    child.classList.add("goniometer-button");
-  }
+  buttonCont.id = "btn-container";
   
   closeButton.classList.add("goniometer-button");
+  settingsButton.classList.add("goniometer-button");
 
   resizeIcon1.append(resizeIcon2);
   resizeHandle.append(resizeIcon1);
@@ -95,8 +99,8 @@ export function createElement() {
   mainDiv.append(container);
   container.append(gonioMeter, canvas, resizeHandle);
 
-  attachCanvasListeners(container, canvas);
-  attachButtonListeners(canvas, copyButton, resetButton, closeButton, convertDegButton, diffButton, rotateButton);
+  attachCanvasListeners(container, canvas, dropdown);
+  attachButtonListeners(canvas, copyButton, resetButton, closeButton, convertDegButton, diffButton, rotateButton, settingsButton);
   activateDrag();
   activateResize();
 }
@@ -131,7 +135,7 @@ function activateResize() {
   }
 }
 
-function attachButtonListeners(canvas, copyButton, resetButton, closeButton, convertDegButton, diffButton, rotateButton) {
+function attachButtonListeners(canvas, copyButton, resetButton, closeButton, convertDegButton, diffButton, rotateButton, settingsButton) {
   copyButton.addEventListener('click', (e) => {
     if (angleDeg){
       var copyText = AngleState.format(angleDeg);
@@ -166,9 +170,15 @@ function attachButtonListeners(canvas, copyButton, resetButton, closeButton, con
     
   });
 
+  settingsButton.addEventListener('click', (e) => {
+    const cont = document.getElementById("btn-container");
+    const isOpen = cont.style.display == 'flex';
+    cont.style.display = isOpen ? 'none' : 'flex';
+  });
+
 }
 
-function attachCanvasListeners(container, canvas) {
+function attachCanvasListeners(container, canvas, dropdown) {
 
   canvas.addEventListener('mousedown', (e) => {
     if (!points) return;
@@ -212,6 +222,13 @@ function attachCanvasListeners(container, canvas) {
     draw(); 
   });
   ro.observe(container);
+
+  document.addEventListener('click', (event) => {
+  if (!dropdown.contains(event.target)) {
+    const cont = document.getElementById("btn-container");
+    cont.style.display = 'none';
+  }
+});
 }
 
 function draw() {

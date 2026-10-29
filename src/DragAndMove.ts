@@ -34,7 +34,7 @@ export class DragAndMove {
   /** Start listening for mouse, touch, and pen drags. Safe to call once. */
   activate() {
     this.handleElement.style.cursor = "move";
-    this.handleElement.style.touchAction = "none";
+    // this.handleElement.style.touchAction = "none";
     this.handleElement.addEventListener("pointerdown", this.onPointerDown);
   }
 
