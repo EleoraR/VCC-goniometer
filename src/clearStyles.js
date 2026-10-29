@@ -230,7 +230,5 @@ function draw() {
 
   ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-  drawUnitCircle(ctx, center);
-
-  midPointArea(ctx, center, getMidPoint(center, first), getMidPoint(center, second), calculateGoniometerAngle(center, first, second));
+  drawUnitCircle(ctx, center, first, second);
 }

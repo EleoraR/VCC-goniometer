@@ -1,4 +1,4 @@
-import {calculateMidPointAngles, distBetweenTwoPoints, getSectorCenter, MATH} from './mathUtils.js';
+import {calculateMidPointAngles, getMidPoint, getSectorCenter, calculateGoniometerAngle, MATH} from './mathUtils.js';
 import {AngleState} from './angleState.js'
 import { APP_CONSTANTS  } from './clearStyles.js';
 import './styles.css'; 
@@ -24,8 +24,8 @@ export function drawDistText(ctx, dist, x, y, fontSize = CONSTANTS.TEXT_FONT_SIZ
 }
 
 export function drawAngleText(ctx, angle, x, y, fontSize = CONSTANTS.TEXT_FONT_SIZE, color = CONSTANTS.DEFAULT_COLOR) {
-  ctx.font = `${fontSize}px Arial`;
-  ctx.fillStyle = color;
+  ctx.font = angle == 0.0? `bold ${fontSize}px Arial` : `${fontSize}px Arial`;
+  ctx.fillStyle = angle == 0.0? "#dc5556" : color;
   ctx.textAlign = 'center';
   ctx.textBaseline = 'middle';
   let labelAngle = AngleState.format(angle);
@@ -76,13 +76,16 @@ function drawCircleOutline(ctx, center, radius, color) {
   ctx.stroke();
 }
 
-export function drawUnitCircle(ctx, center, radius = APP_CONSTANTS.CIRCLE_RADIUS, color = CONSTANTS.CIRCLE_COLOR)  {
+export function drawUnitCircle(ctx, center, first, second, radius = APP_CONSTANTS.CIRCLE_RADIUS, color = CONSTANTS.CIRCLE_COLOR)  {
 
   drawCircleOutline(ctx, center, radius, CONSTANTS.DEFAULT_COLOR);
 
   drawDot(ctx, center.x, center.y, CONSTANTS.DOT_RADIUS, color);
 
   drawPizza(ctx, center);
+
+  //draw mid sec here
+  midPointArea(ctx, center, getMidPoint(center, first), getMidPoint(center, second), calculateGoniometerAngle(center, first, second));
 
   drawPizzaLabels(ctx, center);
 
