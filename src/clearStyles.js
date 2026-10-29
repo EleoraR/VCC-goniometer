@@ -43,7 +43,6 @@ export function createElement() {
   const mainDiv = document.getElementById(DRAWER_ID);
   const container = document.createElement('div');
   const gonioMeter = document.createElement('div');
-  const dragHandle = document.createElement('div');
   const buttonCont = document.createElement('div');
   const copyButton = document.createElement('button');
   const resetButton = document.createElement('button');
@@ -58,10 +57,10 @@ export function createElement() {
 
   container.classList.add('goniometer-container');
   gonioMeter.classList.add('goniometer-title');
+  gonioMeter.id = "goniometer-handle";
   resizeIcon2.classList.add("icon", "icon-link");
 
   container.id = "goniometer-panel";
-  dragHandle.id = "goniometer-handle";
   copyButton.id = "copy-btn"
   resetButton.id = "reset-btn";
   closeButton.id = "close-btn";
@@ -72,15 +71,15 @@ export function createElement() {
   diffButton.id = "diff-btn";
   rotateButton.id = "rotate-btn";
 
-  diffButton.textContent = "diff";
+  diffButton.textContent = "SUBTRACT";
 
   container.style.width = `${APP_CONSTANTS.WIDTH}px`;
   container.style.height = `${APP_CONSTANTS.HEIGHT}px`;
   canvas.width = `${APP_CONSTANTS.CANVAS_WIDTH}px`;
   canvas.height = `${APP_CONSTANTS.CANVAS_HEIGHT}px`;
 
-  buttonCont.append(convertDegButton, copyButton, resetButton, diffButton);
-  gonioMeter.append(dragHandle, buttonCont, closeButton);
+  buttonCont.append(convertDegButton, copyButton, resetButton, diffButton, rotateButton);
+  gonioMeter.append(buttonCont, closeButton);
   
   var children = buttonCont.children;
 
@@ -89,14 +88,13 @@ export function createElement() {
     child.classList.add("goniometer-button");
   }
   
-  dragHandle.classList.add("goniometer-button");
   closeButton.classList.add("goniometer-button");
 
   resizeIcon1.append(resizeIcon2);
   resizeHandle.append(resizeIcon1);
 
   mainDiv.append(container);
-  container.append(gonioMeter, canvas, rotateButton, resizeHandle);
+  container.append(gonioMeter, canvas, resizeHandle);
 
   attachCanvasListeners(container, canvas);
   attachButtonListeners(canvas, copyButton, resetButton, closeButton, convertDegButton, diffButton, rotateButton);
@@ -143,7 +141,7 @@ function attachButtonListeners(canvas, copyButton, resetButton, closeButton, con
   });
 
   resetButton.addEventListener('click', (e) => {
-    points = initializePoints(); // works
+    points = initializePoints(); 
     draw();
   });
 
@@ -181,7 +179,6 @@ function attachCanvasListeners(container, canvas) {
   });
 
   canvas.addEventListener('mousemove', (e) => {
-    // console.log(selectedPoint); selected point is null
     if (!selectedPoint ) return;
     const ctx = canvas.getContext('2d');
     const pos = getMousePos(e, canvas);

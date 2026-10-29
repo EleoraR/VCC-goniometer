@@ -20,9 +20,6 @@ export function initializePoints() {
 
   const center = getCenter();
 
-  console.log("INITIALISE1", center.x - APP_CONSTANTS.CIRCLE_RADIUS, center.y);
-  console.log("INITIALISE2", center.x + APP_CONSTANTS.CIRCLE_RADIUS, center.y);
-
   return [
     { x: center.x - APP_CONSTANTS.CIRCLE_RADIUS, y: center.y, radius: APP_CONSTANTS.CIRCLE_RADIUS },
     { x: center.x + APP_CONSTANTS.CIRCLE_RADIUS, y: center.y, radius: APP_CONSTANTS.CIRCLE_RADIUS }
@@ -42,7 +39,7 @@ export function diffButtonAction(e, first, second) {
 
   if (startAngle && endAngle) {
     copyToClipboard(diffButton.textContent);
-    diffButton.textContent = "diff";
+    diffButton.textContent = "SUBTRACT";
     startAngle = null;
     endAngle = null;
     return;

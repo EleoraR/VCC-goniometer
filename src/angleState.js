@@ -22,7 +22,7 @@ export class AngleState {
   }
 
   static text() {
-    return AngleState.useDegrees ? "°" : "rad";
+    return AngleState.useDegrees ? "DEGREES" : "RADIANS";
   }
 
 }
