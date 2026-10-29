@@ -78,7 +78,7 @@ export function createElement() {
 
   diffButton.textContent = "SUBTRACT";
   resetButton.textContent = "RESET";
-  rotateButton.textContent = "ROTATE";
+  rotateButton.textContent = "90°";
 
   container.style.width = `${APP_CONSTANTS.WIDTH}px`;
   container.style.height = `${APP_CONSTANTS.HEIGHT}px`;
@@ -172,8 +172,8 @@ function attachButtonListeners(canvas, copyButton, resetButton, closeButton, con
 
   settingsButton.addEventListener('click', (e) => {
     const cont = document.getElementById("btn-container");
-    const isOpen = cont.style.display == 'flex';
-    cont.style.display = isOpen ? 'none' : 'flex';
+    cont.classList.toggle('open');
+
   });
 
 }
@@ -224,10 +224,13 @@ function attachCanvasListeners(container, canvas, dropdown) {
   ro.observe(container);
 
   document.addEventListener('click', (event) => {
-  if (!dropdown.contains(event.target)) {
     const cont = document.getElementById("btn-container");
-    cont.style.display = 'none';
-  }
+    const btn = document.getElementById("settings-btn");
+    if (!dropdown.contains(event.target) && !cont.contains(event.target) && !btn.contains(event.target)) {
+      if (cont.classList.contains('open')) {
+        cont.classList.remove('open');
+      }
+    }
 });
 }
 
