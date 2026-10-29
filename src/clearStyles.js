@@ -19,7 +19,7 @@ let points = null;
 let angleDeg = null;
 
 export function clearStyles(id) {
-const el = document.getElementById(id);
+  const el = document.getElementById(id);
   if (!el) {
     console.warn(`No element found with id "${id}"`);
     return null;
@@ -56,14 +56,14 @@ export function createElement() {
   const resizeIcon1 = document.createElement('i');
   const resizeIcon2 = document.createElement('i');
 
-  dropdown.append(settingsButton, buttonCont);
-
   container.classList.add('goniometer-container');
   gonioMeter.classList.add('goniometer-title');
+  resizeIcon2.classList.add("icon", "icon-link");
+  closeButton.classList.add("goniometer-button");
+  settingsButton.classList.add("goniometer-button");
+
   gonioMeter.id = "goniometer-handle";
   dropdown.id = "settings-dropdown";
-  resizeIcon2.classList.add("icon", "icon-link");
-
   container.id = "goniometer-panel";
   copyButton.id = "copy-btn"
   resetButton.id = "reset-btn";
@@ -75,6 +75,7 @@ export function createElement() {
   diffButton.id = "diff-btn";
   rotateButton.id = "rotate-btn";
   settingsButton.id = "settings-btn";
+  buttonCont.id = "btn-container";
 
   diffButton.textContent = "SUBTRACT";
   resetButton.textContent = "RESET";
@@ -85,17 +86,11 @@ export function createElement() {
   canvas.width = `${APP_CONSTANTS.CANVAS_WIDTH}px`;
   canvas.height = `${APP_CONSTANTS.CANVAS_HEIGHT}px`;
 
+  dropdown.append(settingsButton, buttonCont);
   buttonCont.append(convertDegButton, copyButton, resetButton, diffButton, rotateButton);
   gonioMeter.append(dropdown, closeButton);
-
-  buttonCont.id = "btn-container";
-  
-  closeButton.classList.add("goniometer-button");
-  settingsButton.classList.add("goniometer-button");
-
   resizeIcon1.append(resizeIcon2);
   resizeHandle.append(resizeIcon1);
-
   mainDiv.append(container);
   container.append(gonioMeter, canvas, resizeHandle);
 
@@ -106,9 +101,9 @@ export function createElement() {
 }
 
 export function showHideElement(elementId, showHide) {
-    points = initializePoints();
-    const el = document.getElementById(elementId);
-    el.style.display = showHide ? 'block' : 'none';
+  points = initializePoints();
+  const el = document.getElementById(elementId);
+  el.style.display = showHide ? 'block' : 'none';
 }
 
 window.addEventListener('mouseup', () => {
