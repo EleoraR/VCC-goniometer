@@ -1,11 +1,10 @@
 import { DRAWER_ID } from "../lib/constants";
 import './styles.css'; 
-import { calculateGoniometerAngle, getMidPoint, getMousePos, scalePoints } from './mathUtils.js';
-import { drawPizzaLabels, drawUnitCircle, midPointArea } from './drawCanvas.js';
-import { copyToClipboard, changeFontSize, initializePoints, diffButtonAction, updateConstants, getCenter } from './helper.js';
+import { drawUnitCircle } from './drawCanvas.js';
+import { copyToClipboard, changeFontSize, initializePoints, diffButtonAction, updateConstants, getCenter, getMousePos, scalePoints } from './helper.js';
 import {AngleState} from './angleState.js'
 import { DragAndMove } from "./DragAndMove";
-import { Resize } from "./Resize.js";
+import { Resize } from "./Resize";
 
 export const APP_CONSTANTS = {
   WIDTH: 480,

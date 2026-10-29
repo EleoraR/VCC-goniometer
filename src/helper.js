@@ -65,3 +65,29 @@ export function updateConstants(width, height) {
   APP_CONSTANTS.CANVAS_HEIGHT = APP_CONSTANTS.HEIGHT - 60;
   APP_CONSTANTS.CIRCLE_RADIUS = (APP_CONSTANTS.CANVAS_WIDTH /2) - 10;
 }
+
+export function getMousePos(e, canvas) {
+  if (!canvas) return;
+  const rect = canvas.getBoundingClientRect();
+
+  return {
+    x: e.clientX - rect.left,
+    y: e.clientY - rect.top
+  };
+}
+
+export function scalePoints(point, newSize, prevSize) { 
+  const [prevWidth, prevHeight] = prevSize; 
+  const [newWidth, newHeight] = newSize;
+
+  if (prevWidth && prevHeight) {
+    const sx = newWidth / prevWidth;   
+    const sy = newHeight / prevHeight;
+
+    return {
+      x: point.x *= sx,
+      y: point.y *= sy
+    };
+  }
+
+}

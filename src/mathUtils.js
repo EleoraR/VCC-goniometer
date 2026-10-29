@@ -63,32 +63,6 @@ export function distBetweenTwoPoints(point1, point2) {
   return Math.sqrt(dx * dx + dy * dy);
 }
 
-export function getMousePos(e, canvas) {
-  if (!canvas) return;
-  const rect = canvas.getBoundingClientRect();
-
-  return {
-    x: e.clientX - rect.left,
-    y: e.clientY - rect.top
-  };
-}
-
-export function scalePoints(point, newSize, prevSize) { 
-  const [prevWidth, prevHeight] = prevSize; 
-  const [newWidth, newHeight] = newSize;
-
-  if (prevWidth && prevHeight) {
-    const sx = newWidth / prevWidth;   
-    const sy = newHeight / prevHeight;
-
-    return {
-      x: point.x *= sx,
-      y: point.y *= sy
-    };
-  }
-
-}
-
 export function getAcuteAngle(angle) {
   return angle < Math.PI;
 }
