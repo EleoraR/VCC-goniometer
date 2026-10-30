@@ -7,6 +7,7 @@ let startAngle = null;
 let endAngle = null;
 
 export function copyToClipboard(text) {
+  console.log("copying");
   navigator.clipboard.writeText(text);
   alert("Copied to clipboard: " + text);
 }
@@ -38,6 +39,9 @@ export function diffButtonAction(e, first, second) {
   const center = getCenter();
 
   if (startAngle && endAngle) {
+    if (diffButton.classList.contains('subtract')) {
+      diffButton.classList.remove('subtract');
+    }
     copyToClipboard(diffButton.textContent);
     diffButton.textContent = "SUBTRACT";
     startAngle = null;
@@ -46,11 +50,11 @@ export function diffButtonAction(e, first, second) {
   }
 
   if (!startAngle) {
+    diffButton.classList.add('subtract');
     startAngle = calculateGoniometerAngle(center, first, second);
     diffButton.textContent = "=";
 
   } else {
-
     endAngle = calculateGoniometerAngle(center, first, second);
     let diff = (startAngle - endAngle) > 0 ? startAngle - endAngle : endAngle - startAngle;
     diffButton.textContent = `${AngleState.format(diff)}`;

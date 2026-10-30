@@ -16,7 +16,6 @@ export const APP_CONSTANTS = {
 
 let selectedPoint = null;
 let points = null;
-let angleDeg = null;
 
 export function clearStyles(id) {
   const el = document.getElementById(id);
@@ -132,8 +131,9 @@ function activateResize() {
 
 function attachButtonListeners(canvas, copyButton, resetButton, closeButton, convertDegButton, diffButton, rotateButton, settingsButton) {
   copyButton.addEventListener('click', (e) => {
-    if (angleDeg){
-      var copyText = AngleState.format(angleDeg);
+    console.log("copy clickde");
+    if (AngleState.angleDeg){
+      var copyText = AngleState.format(AngleState.angleDeg);
       copyToClipboard(copyText);
     } 
   });

@@ -125,6 +125,10 @@
     font-family: 'FontAwesome';
 }
 
+#diff-btn.subtract{
+    background: #dc5556;
+}
+
 #resize-icon-1 {
     order: 1px solid red;
 }

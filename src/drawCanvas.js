@@ -81,7 +81,8 @@ export function drawUnitCircle(ctx, center, first, second, radius = APP_CONSTANT
   drawCircleOutline(ctx, center, radius, '#747474');
   drawDot(ctx, center.x, center.y, CONSTANTS.DOT_RADIUS, color);
   drawPizza(ctx, center);
-  midPointArea(ctx, center, getMidPoint(center, first), getMidPoint(center, second), calculateGoniometerAngle(center, first, second));
+  AngleState.angleDeg = calculateGoniometerAngle(center, first, second);
+  midPointArea(ctx, center, getMidPoint(center, first), getMidPoint(center, second), AngleState.angleDeg);
   drawPizzaLabels(ctx, center);
 
 }
