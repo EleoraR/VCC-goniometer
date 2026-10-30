@@ -1,5 +1,6 @@
 import { DRAWER_ID } from "../lib/constants";
 import './styles.css'; 
+import { MATH } from "./mathUtils.js";
 import { drawUnitCircle } from './drawCanvas.js';
 import { copyToClipboard, changeFontSize, initializePoints, diffButtonAction, updateConstants, getCenter, getMousePos, scalePoints } from './helper.js';
 import {AngleState} from './angleState.js'
@@ -54,12 +55,18 @@ export function createElement() {
   const resizeHandle = document.createElement('div');
   const resizeIcon1 = document.createElement('i');
   const resizeIcon2 = document.createElement('i');
+  const angleText = document.createElement('div');
+  const acuteAng = document.createElement('p');
+  const obtuseAng = document.createElement('p');
+  const startAng = document.createElement('p');
+  const endAng = document.createElement('p');
 
   container.classList.add('goniometer-container');
   gonioMeter.classList.add('goniometer-title');
   resizeIcon2.classList.add("icon", "icon-link");
   closeButton.classList.add("goniometer-button");
   settingsButton.classList.add("goniometer-button");
+  angleText.classList.add('goniometer-angles');
 
   gonioMeter.id = "goniometer-handle";
   dropdown.id = "settings-dropdown";
@@ -75,19 +82,28 @@ export function createElement() {
   rotateButton.id = "rotate-btn";
   settingsButton.id = "settings-btn";
   buttonCont.id = "btn-container";
+  acuteAng.id = "acute-ang";
+  obtuseAng.id = "obtuse-ang";
+  startAng.id = "start-ang";
+  endAng.id = "end-ang";
 
   diffButton.textContent = "SUBTRACT";
   resetButton.textContent = "RESET";
   rotateButton.textContent = "90°";
+  acuteAng.textContent = "acute";
+  obtuseAng.textContent = "obtuse";
+  startAng.textContent = "start";
+  endAng.textContent = "end";
 
   container.style.width = `${APP_CONSTANTS.WIDTH}px`;
   container.style.height = `${APP_CONSTANTS.HEIGHT}px`;
   canvas.width = `${APP_CONSTANTS.CANVAS_WIDTH}px`;
   canvas.height = `${APP_CONSTANTS.CANVAS_HEIGHT}px`;
 
+  angleText.append(acuteAng, obtuseAng, startAng, endAng);
   dropdown.append(settingsButton, buttonCont);
   buttonCont.append(convertDegButton, copyButton, resetButton, diffButton, rotateButton);
-  gonioMeter.append(dropdown, closeButton);
+  gonioMeter.append(dropdown, angleText, closeButton);
   resizeIcon1.append(resizeIcon2);
   resizeHandle.append(resizeIcon1);
   mainDiv.append(container);
@@ -234,6 +250,8 @@ function draw() {
   if (!points) return;
 
   const stateBtn = document.getElementById('deg-btn');
+  const startAngText = document.getElementById('start-ang');
+  const endAngText = document.getElementById('end-ang');
   const canvas = document.getElementById('goniometer-canvas');
   const ctx = canvas.getContext('2d');
   const center = getCenter();
@@ -241,6 +259,8 @@ function draw() {
   const [first, second] = points;
 
   stateBtn.textContent = AngleState.text();
+  startAngText.textContent = AngleState.format(AngleState.startAngle);
+  endAngText.textContent = AngleState.format(AngleState.endAngle);
 
   ctx.clearRect(0, 0, canvas.width, canvas.height);
 

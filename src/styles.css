@@ -126,7 +126,15 @@
 }
 
 #diff-btn.subtract{
-    background: #dc5556;
+    /* background: #dc5556; */
+}
+
+.goniometer-angles {
+    width: 8rem;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: 1fr 1fr;
+    gap: 0.25rem;
 }
 
 #resize-icon-1 {
