@@ -64,6 +64,7 @@ export function midPointArea(ctx, center, midFirst, midSecond, angleDeg, radius 
   const [startAngle, endAngle] = calculateMidPointAngles(center, midFirst, midSecond);
 
   drawArc(ctx, center.x,center.y,radius,startAngle,endAngle, fillColor);
+  drawDot(ctx, center.x, center.y, 4, '#009f96');
   const sectorCenPt = getSectorCenter(center, startAngle, endAngle, radius);
   drawAngleText(ctx, angleDeg, sectorCenPt.x, sectorCenPt.y);
 }
@@ -77,16 +78,10 @@ function drawCircleOutline(ctx, center, radius, color) {
 }
 
 export function drawUnitCircle(ctx, center, first, second, radius = APP_CONSTANTS.CIRCLE_RADIUS, color = CONSTANTS.CIRCLE_COLOR)  {
-
-  drawCircleOutline(ctx, center, radius, CONSTANTS.DEFAULT_COLOR);
-
+  drawCircleOutline(ctx, center, radius, '#747474');
   drawDot(ctx, center.x, center.y, CONSTANTS.DOT_RADIUS, color);
-
   drawPizza(ctx, center);
-
-  //draw mid sec here
   midPointArea(ctx, center, getMidPoint(center, first), getMidPoint(center, second), calculateGoniometerAngle(center, first, second));
-
   drawPizzaLabels(ctx, center);
 
 }
