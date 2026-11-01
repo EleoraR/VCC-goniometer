@@ -125,16 +125,19 @@
     font-family: 'FontAwesome';
 }
 
-#diff-btn.subtract{
-    /* background: #dc5556; */
+#acute-ang {
+    background: #009f96;
 }
 
 .goniometer-angles {
     width: 8rem;
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    grid-template-rows: 1fr 1fr;
-    gap: 0.25rem;
+    display: flex;
+    justify-content: center;
+
+    p {
+        padding: 0.5rem;
+        border-radius: 8px;
+    }
 }
 
 #resize-icon-1 {

@@ -9,8 +9,13 @@ export class AngleState {
   static direction = 0;
 
   static angleDeg = null;
-  static startAngle = null;
-  static endAngle = null;
+  static first = null;
+  static second = null;
+  static center = null;
+
+  static getCen() {
+    return this.center;
+  }
 
   static rotate90() {
     this.direction = (this.direction + MATH.HALFPI + MATH.TWOPI) % (MATH.TWOPI);

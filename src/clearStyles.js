@@ -1,6 +1,6 @@
 import { DRAWER_ID } from "../lib/constants";
 import './styles.css'; 
-import { MATH } from "./mathUtils.js";
+import { calculateGoniometerAngle, MATH } from "./mathUtils.js";
 import { drawUnitCircle } from './drawCanvas.js';
 import { copyToClipboard, changeFontSize, initializePoints, diffButtonAction, updateConstants, getCenter, getMousePos, scalePoints } from './helper.js';
 import {AngleState} from './angleState.js'
@@ -58,8 +58,6 @@ export function createElement() {
   const angleText = document.createElement('div');
   const acuteAng = document.createElement('p');
   const obtuseAng = document.createElement('p');
-  const startAng = document.createElement('p');
-  const endAng = document.createElement('p');
 
   container.classList.add('goniometer-container');
   gonioMeter.classList.add('goniometer-title');
@@ -84,23 +82,19 @@ export function createElement() {
   buttonCont.id = "btn-container";
   acuteAng.id = "acute-ang";
   obtuseAng.id = "obtuse-ang";
-  startAng.id = "start-ang";
-  endAng.id = "end-ang";
 
   diffButton.textContent = "SUBTRACT";
   resetButton.textContent = "RESET";
   rotateButton.textContent = "90°";
-  acuteAng.textContent = "acute";
-  obtuseAng.textContent = "obtuse";
-  startAng.textContent = "start";
-  endAng.textContent = "end";
+  acuteAng.textContent = "0.0";
+  obtuseAng.textContent = "0.0";
 
   container.style.width = `${APP_CONSTANTS.WIDTH}px`;
   container.style.height = `${APP_CONSTANTS.HEIGHT}px`;
   canvas.width = `${APP_CONSTANTS.CANVAS_WIDTH}px`;
   canvas.height = `${APP_CONSTANTS.CANVAS_HEIGHT}px`;
 
-  angleText.append(acuteAng, obtuseAng, startAng, endAng);
+  angleText.append(acuteAng, obtuseAng);
   dropdown.append(settingsButton, buttonCont);
   buttonCont.append(convertDegButton, copyButton, resetButton, diffButton, rotateButton);
   gonioMeter.append(dropdown, angleText, closeButton);
@@ -250,19 +244,22 @@ function draw() {
   if (!points) return;
 
   const stateBtn = document.getElementById('deg-btn');
-  const startAngText = document.getElementById('start-ang');
-  const endAngText = document.getElementById('end-ang');
+  const acuteAng = document.getElementById('acute-ang');
+  const obtuseAng = document.getElementById('obtuse-ang');
   const canvas = document.getElementById('goniometer-canvas');
   const ctx = canvas.getContext('2d');
   const center = getCenter();
 
   const [first, second] = points;
+  AngleState.first = first;
+  AngleState.second = second;
+  AngleState.center = center;
 
   stateBtn.textContent = AngleState.text();
-  startAngText.textContent = AngleState.format(AngleState.startAngle);
-  endAngText.textContent = AngleState.format(AngleState.endAngle);
+  acuteAng.textContent = AngleState.format(AngleState.angleDeg);
+  obtuseAng.textContent = AngleState.format(MATH.TWOPI - AngleState.angleDeg);
 
   ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-  drawUnitCircle(ctx, center, first, second);
+  drawUnitCircle(ctx);
 }
