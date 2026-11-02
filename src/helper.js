@@ -45,28 +45,37 @@ export function getCenter() {
 
 export function diffButtonAction(e, first, second) {
   const diffButton = e.target;
+  const subtractCont = document.getElementById("subtract-cont");
+  const angle1text = document.getElementById("sub-angle-1");
+  const angle2text = document.getElementById("sub-angle-2");
+  const angledifftext = document.getElementById("sub-angle-diff");
   const center = getCenter();
 
   if (startAngle && endAngle) {
-    if (diffButton.classList.contains('subtract')) {
-      diffButton.classList.remove('subtract');
-    }
-    copyToClipboard(diffButton.textContent);
+ 
+    // copyToClipboard(diffButton.textContent); // temp
     diffButton.textContent = "SUBTRACT";
     startAngle = null;
     endAngle = null;
+    angle1text.textContent = "Angle1: 0.0";
+    angle2text.textContent = "Angle2: 0.0";
+    angledifftext.textContent = "Difference: 0.0";
     return;
   }
 
   if (!startAngle) {
-    diffButton.classList.add('subtract');
+    subtractCont.classList.add('subtract');
     startAngle = calculateGoniometerAngle(center, first, second);
-    diffButton.textContent = "=";
+    diffButton.textContent = "EQUALS";
+    angle1text.textContent = `Angle1: ${AngleState.format(startAngle)}`
 
   } else {
     endAngle = calculateGoniometerAngle(center, first, second);
-    let diff = (startAngle - endAngle) > 0 ? startAngle - endAngle : endAngle - startAngle;
-    diffButton.textContent = `${AngleState.format(diff)}`;
+    // let diff = (startAngle - endAngle) > 0 ? startAngle - endAngle : endAngle - startAngle;
+    let diff = startAngle - endAngle;
+    diffButton.textContent = "AGAIN";
+    angle2text.textContent = `Angle2: ${AngleState.format(endAngle)}`
+    angledifftext.textContent = `Difference: ${AngleState.format(diff)}`;
   }
 }
 

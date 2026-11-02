@@ -8,7 +8,7 @@
     --whiteish: #f2f2f2;
 }
 
-#goniometer-handle {
+#goniometer-handle, #sub-cont-handle{
     user-select: none;
 }
 
@@ -20,7 +20,7 @@
     background: none;
     border-radius: 25px;
     background-color: #f2f2f24d;
-    overflow: hidden;
+    /* overflow: hidden; */
     display: block;
     min-width: 300px;
     max-width: 850px;
@@ -35,15 +35,41 @@
     margin: auto;
 }
 
+#subtract-cont {
+    display: none;
+    position: absolute;
+    background: #d9d9d94d;
+    box-shadow: rgba(60, 64, 67, 0.3) 0px 1px 2px 0px, rgba(60, 64, 67, 0.15) 0px 2px 6px 2px;
+    border-radius: 15px;
+    padding: 0.5rem 1rem;
+    z-index: 9999;
+    left: -150px;
+    bottom: 40px;
+    color: black;
+    width: 140px;
+    height: 140px;
+
+    &.subtract {
+        display: flex;
+        flex-direction: column;
+        gap: 0.5rem;
+    }
+}
+
+#subtract-cont-header {
+    display: inline-block;
+}
+
 #btn-container{
     display: none;
     position: absolute;
-    /* background: #d9d9d9b0; */
-    background: #747474;
+    background: #d9d9d94d;
     box-shadow: rgba(60, 64, 67, 0.3) 0px 1px 2px 0px, rgba(60, 64, 67, 0.15) 0px 2px 6px 2px;
     border-radius: 15px;
     padding: 0.5rem;
     z-index: 9999;
+    left: -150px;
+    width: 140px;
 }
 
 #btn-container.open {
@@ -61,6 +87,7 @@
     flex-direction: row;
     justify-content: space-between;
     align-content: center;
+    border-radius: 25px 25px 0 0;
     background: #d9d9d94d;
     box-shadow: rgba(60, 64, 67, 0.3) 0px 1px 2px 0px, rgba(60, 64, 67, 0.15) 0px 2px 6px 2px;
 }
@@ -96,8 +123,17 @@
     cursor: copy;
 }
 
-#close-btn::after {
+#close-btn::after, #sub-close-btn::after {
     content: '\f00d';
+    font-family: 'FontAwesome';
+}
+
+#sub-close-btn::after {
+    float: right;
+}
+
+#sub-cont-handle::after {
+    content: '\f0b2';
     font-family: 'FontAwesome';
 }
 

@@ -14,4 +14,6 @@
 #### Working on:
 - [ ] BUG: drawer toggle active state does not update
 - [ ] FEATURE: subtract mode
+- [ ] SUBTRACT MODE: drag and move
+- [ ] SUBTRACT MODE: UI/UX
 - [ ] transparency slider
