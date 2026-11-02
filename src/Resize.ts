@@ -5,9 +5,10 @@ export class Resize {
   private lastY = 0;
   private startWidth = 0;
   private startHeight = 0;
-  private aspectRatio = 0;
   private deltaX = 0;
   private deltaY = 0;
+  
+  private static MIN_WIDTH = 100;
 
   //adjustments for strip-only mode error
   private readonly handleElement: HTMLElement;
@@ -56,8 +57,6 @@ export class Resize {
     this.startWidth = rect.width;
     this.startHeight = rect.height;
 
-    this.aspectRatio = this.startWidth / this.startHeight;
-
     const view = this.documentContext.defaultView ?? window;
 
     this.startWidth = parseInt(view.getComputedStyle(this.resizeElement).width, 10);
@@ -71,7 +70,6 @@ export class Resize {
 
   private onPointerMove(event: PointerEvent) {
     if (event.pointerId !== this.activePointerId) return;
-    const minWidth = 100;
 
     this.deltaX = event.clientX - this.lastX;
     this.deltaY = event.clientY - this.lastY;
@@ -80,7 +78,7 @@ export class Resize {
       Math.abs(this.deltaX) > Math.abs(this.deltaY) ? this.deltaX : this.deltaY;
 
     const size = Math.max(
-      minWidth, 
+      Resize.MIN_WIDTH, 
       this.startWidth + delta
     );
     
