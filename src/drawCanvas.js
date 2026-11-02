@@ -18,7 +18,7 @@ export const CONSTANTS = {
 let center = null;
 let ctx = null;
 
-export function drawDistText(ctx, dist, x, y, fontSize = CONSTANTS.TEXT_FONT_SIZE, color = CONSTANTS.DEFAULT_COLOR) {
+export function drawDistText(dist, x, y, fontSize = CONSTANTS.TEXT_FONT_SIZE, color = CONSTANTS.DEFAULT_COLOR) {
   ctx.font = `${fontSize}px Arial`;
   ctx.fillStyle = color;
   ctx.textAlign = 'center';
@@ -26,7 +26,7 @@ export function drawDistText(ctx, dist, x, y, fontSize = CONSTANTS.TEXT_FONT_SIZ
   ctx.fillText(`${dist.toFixed(2)}`, x, y);
 }
 
-export function drawAngleText(ctx, angle, x, y, fontSize = CONSTANTS.TEXT_FONT_SIZE, color = CONSTANTS.DEFAULT_COLOR) {
+export function drawAngleText(angle, x, y, fontSize = CONSTANTS.TEXT_FONT_SIZE, color = CONSTANTS.DEFAULT_COLOR) {
   ctx.font = angle == 0.0? `bold ${fontSize}px Arial` : `${fontSize}px Arial`;
   ctx.fillStyle = angle == 0.0? "#1e4759" : color;
   ctx.textAlign = 'center';
@@ -35,14 +35,14 @@ export function drawAngleText(ctx, angle, x, y, fontSize = CONSTANTS.TEXT_FONT_S
   ctx.fillText(`${labelAngle}`, x, y);
 }
 
-export function drawDot(ctx, p, radius = CONSTANTS.DOT_RADIUS, color = CONSTANTS.DEFAULT_COLOR) {
+export function drawDot(p, radius = CONSTANTS.DOT_RADIUS, color = CONSTANTS.DEFAULT_COLOR) {
   ctx.fillStyle = color;
   ctx.beginPath()
   ctx.arc(p.x, p.y, radius, 0, MATH.TWOPI);
   ctx.fill();
 }
 
-export function drawLine(ctx, x1, y1, x2, y2, color = CONSTANTS.LINE_COLOR, lineWidth = CONSTANTS.LINE_WIDTH) {
+export function drawLine(x1, y1, x2, y2, color = CONSTANTS.LINE_COLOR, lineWidth = CONSTANTS.LINE_WIDTH) {
   ctx.strokeStyle = color;
   ctx.lineWidth = lineWidth;
   ctx.beginPath();
@@ -51,7 +51,7 @@ export function drawLine(ctx, x1, y1, x2, y2, color = CONSTANTS.LINE_COLOR, line
   ctx.stroke();       
 }
 
-export function drawArc(ctx, x, y, radius, startAngle, endAngle, color, counterclockwise = false) {
+export function drawArc(x, y, radius, startAngle, endAngle, color, counterclockwise = false) {
   ctx.beginPath();
   ctx.moveTo(x, y);   
   ctx.arc(x,y,radius,startAngle,endAngle,counterclockwise);
@@ -63,17 +63,17 @@ export function drawArc(ctx, x, y, radius, startAngle, endAngle, color, counterc
   ctx.stroke();    
 }
 
-export function midPointArea(ctx, midFirst, midSecond, angleDeg, radius = APP_CONSTANTS.CIRCLE_RADIUS, fillColor = CONSTANTS.SECTOR_COLOR) {
+export function midPointArea(midFirst, midSecond, angleDeg, radius = APP_CONSTANTS.CIRCLE_RADIUS, fillColor = CONSTANTS.SECTOR_COLOR) {
   const [startAngle, endAngle] = calculateMidPointAngles(center, midFirst, midSecond);
   
-  drawArc(ctx, center.x,center.y,radius,startAngle,endAngle, fillColor);
-  drawDot(ctx, center, 4, '#009f96');
+  drawArc(center.x,center.y,radius,startAngle,endAngle, fillColor);
+  drawDot(center, 4, '#009f96');
   const sectorCenPt = getSectorCenter(center, startAngle, endAngle, radius);
 
-  drawAngleText(ctx, angleDeg, sectorCenPt.x, sectorCenPt.y);
+  drawAngleText(angleDeg, sectorCenPt.x, sectorCenPt.y);
 }
 
-function drawCircleOutline(ctx, radius = APP_CONSTANTS.CIRCLE_RADIUS, color = '#747474') {
+function drawCircleOutline(radius = APP_CONSTANTS.CIRCLE_RADIUS, color = '#747474') {
   ctx.strokeStyle = color;
   ctx.lineWidth = CONSTANTS.LINE_WIDTH;
   ctx.beginPath();
@@ -88,24 +88,24 @@ export function drawUnitCircle(ctxObj, color = CONSTANTS.CIRCLE_COLOR)  {
   const first = AngleState.first;
   const second = AngleState.second;
 
-  drawCircleOutline(ctx);
-  drawDot(ctx, center, CONSTANTS.DOT_RADIUS, color);
-  drawPizza(ctx);
-  midPointArea(ctx, getMidPoint(center, first), getMidPoint(center, second), AngleState.angleDeg);
-  drawPizzaLabels(ctx);
+  drawCircleOutline();
+  drawDot(center, CONSTANTS.DOT_RADIUS, color);
+  drawPizza();
+  midPointArea(getMidPoint(center, first), getMidPoint(center, second), AngleState.angleDeg);
+  drawPizzaLabels();
 
 }
 
-function drawPizza(ctx, radius = APP_CONSTANTS.CIRCLE_RADIUS, color = CONSTANTS.CIRCLE_COLOR, slices = CONSTANTS.SLICES) {
+function drawPizza(radius = APP_CONSTANTS.CIRCLE_RADIUS, color = CONSTANTS.CIRCLE_COLOR, slices = CONSTANTS.SLICES) {
 
   for (let i = 0; i < slices; i++) {
    
     const angle = (i * MATH.TWOPI) / slices;
-    drawLine(ctx, center.x, center.y, center.x + radius * Math.cos(angle), center.y + radius * Math.sin(angle), color, 1);    
+    drawLine(center.x, center.y, center.x + radius * Math.cos(angle), center.y + radius * Math.sin(angle), color, 1);    
   }
 }
 
-export function drawPizzaLabels(ctx, slices = CONSTANTS.SLICES) {
+export function drawPizzaLabels(slices = CONSTANTS.SLICES) {
   const step = (MATH.TWOPI) / slices;
 
   for (let i = 0; i < slices; i++) {
@@ -114,17 +114,17 @@ export function drawPizzaLabels(ctx, slices = CONSTANTS.SLICES) {
     
     const labelAngle = i * step - Math.PI / 2 + AngleState.direction;
 
-    drawLabel(ctx, angle, labelAngle);
+    drawLabel(angle, labelAngle);
     
   }
 }
 
-function drawLabel(ctx, angle, labelAngle, radius = APP_CONSTANTS.CIRCLE_RADIUS) {
+function drawLabel(angle, labelAngle, radius = APP_CONSTANTS.CIRCLE_RADIUS) {
 
   const labelPoint = {
     x: center.x + radius * 0.85 * Math.cos(labelAngle),
     y: center.y + radius * 0.85 * Math.sin(labelAngle)
   }
     
-  drawAngleText(ctx, angle, labelPoint.x, labelPoint.y);
+  drawAngleText(angle, labelPoint.x, labelPoint.y);
 }
