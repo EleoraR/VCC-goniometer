@@ -1,6 +1,6 @@
 import { APP_CONSTANTS } from "./clearStyles";
 import { CONSTANTS } from "./drawCanvas";
-import { calculateGoniometerAngle, MATH } from "./mathUtils";
+import { calculateGoniometerAngle, distBetweenTwoPoints, MATH } from "./mathUtils";
 import {AngleState} from './angleState.js'
 
 let startAngle = null;
@@ -92,11 +92,26 @@ export function getMousePos(e, canvas) {
 export function scalePoints(point, newSize, prevSize) { 
   const [prevWidth, prevHeight] = prevSize; 
   const [newWidth, newHeight] = newSize;
+  const prevCenter = (prevWidth/2, prevHeight/2);
 
-  if (prevWidth && prevHeight) {
-    const sx = newWidth / prevWidth;   
-    const sy = newHeight / prevHeight;
+  if (!prevWidth || !prevHeight) return;
 
+  const sx = newWidth / prevWidth;   
+  const sy = newHeight / prevHeight;  
+
+  let dx = (point.x - prevCenter.x) * sx;
+  let dy = (point.y - prevCenter.y) * sx;
+
+  const radius = APP_CONSTANTS.CIRCLE_RADIUS;
+  const distance = Math.hypot(dx, dy);
+
+  if (distance > radius) {
+    const k = radius / distance;
+    return {
+      x: dx *= k,
+      y: dy *= k
+    };
+  } else {
     return {
       x: point.x *= sx,
       y: point.y *= sy

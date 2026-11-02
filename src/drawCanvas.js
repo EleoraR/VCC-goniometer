@@ -15,7 +15,8 @@ export const CONSTANTS = {
   SECTOR_COLOR: '#009f964d'
 }
 
-let center = AngleState.center;
+let center = null;
+let ctx = null;
 
 export function drawDistText(ctx, dist, x, y, fontSize = CONSTANTS.TEXT_FONT_SIZE, color = CONSTANTS.DEFAULT_COLOR) {
   ctx.font = `${fontSize}px Arial`;
@@ -80,8 +81,10 @@ function drawCircleOutline(ctx, radius = APP_CONSTANTS.CIRCLE_RADIUS, color = '#
   ctx.stroke();
 }
 
-export function drawUnitCircle(ctx, color = CONSTANTS.CIRCLE_COLOR)  {
+export function drawUnitCircle(ctxObj, color = CONSTANTS.CIRCLE_COLOR)  {
   center = AngleState.center;
+  ctx = ctxObj;
+
   const first = AngleState.first;
   const second = AngleState.second;
 

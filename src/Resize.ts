@@ -71,26 +71,21 @@ export class Resize {
 
   private onPointerMove(event: PointerEvent) {
     if (event.pointerId !== this.activePointerId) return;
+    const minWidth = 100;
 
     this.deltaX = event.clientX - this.lastX;
     this.deltaY = event.clientY - this.lastY;
 
-    let newWidth = this.startWidth + this.deltaX;
-    let newHeight = this.startHeight + this.deltaY;
+    const delta =
+      Math.abs(this.deltaX) > Math.abs(this.deltaY) ? this.deltaX : this.deltaY;
 
-    if (Math.abs(this.deltaX) > Math.abs(this.deltaY)) {
-        // Width is the dominant driver; calculate height based on it
-        newHeight = newWidth / this.aspectRatio;
-    } else {
-        // Height is the dominant driver; calculate width based on it
-        newWidth = newHeight * this.aspectRatio;
-    }
-
-    const minWidth = 100;
-    const minHeight = minWidth / this.aspectRatio;
+    const size = Math.max(
+      minWidth, 
+      this.startWidth + delta
+    );
     
-    if (newWidth > minWidth) this.resizeElement.style.width = newWidth + 'px';
-    if (newHeight > minHeight) this.resizeElement.style.height = newHeight + 'px';
+    this.resizeElement.style.width = `${size}px`;
+    this.resizeElement.style.height = `${size}px`;
 
   }
 
