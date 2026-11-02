@@ -1,13 +1,12 @@
 import { APP_CONSTANTS } from "./clearStyles";
 import { CONSTANTS } from "./drawCanvas";
-import { calculateGoniometerAngle } from "./mathUtils";
+import { calculateGoniometerAngle, MATH } from "./mathUtils";
 import {AngleState} from './angleState.js'
 
 let startAngle = null;
 let endAngle = null;
 
 export function copyToClipboard(text) {
-  console.log("copying");
   navigator.clipboard.writeText(text);
   alert("Copied to clipboard: " + text);
 }
@@ -18,13 +17,23 @@ export function changeFontSize(width = APP_CONSTANTS.WIDTH, height = APP_CONSTAN
 }
 
 export function initializePoints() {
-
   const center = getCenter();
+  const radius = APP_CONSTANTS.CIRCLE_RADIUS;
+  const angle = Math.PI / 2 + AngleState.direction;
 
   return [
-    { x: center.x - APP_CONSTANTS.CIRCLE_RADIUS, y: center.y, radius: APP_CONSTANTS.CIRCLE_RADIUS },
-    { x: center.x + APP_CONSTANTS.CIRCLE_RADIUS, y: center.y, radius: APP_CONSTANTS.CIRCLE_RADIUS }
+    {
+      x: center.x + radius * Math.cos(angle),
+      y: center.y - radius * Math.sin(angle),
+      radius
+    },
+    {
+      x: center.x + radius * Math.cos(angle + Math.PI),
+      y: center.y - radius * Math.sin(angle + Math.PI),
+      radius
+    }
   ];
+
 }
 
 export function getCenter() {

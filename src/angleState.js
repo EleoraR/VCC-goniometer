@@ -13,17 +13,11 @@ export class AngleState {
   static second = null;
   static center = null;
 
-  static getCen() {
-    return this.center;
-  }
+  static zeroPoint = null;
 
   static rotate90() {
     this.direction = (this.direction + MATH.HALFPI + MATH.TWOPI) % (MATH.TWOPI);
-  }
-
-  static rotateAng(ang) {
-    this.direction = (this.direction + ang + MATH.TWOPI) % (MATH.TWOPI);
-    return this.direction;
+    // console.log("DIR",this.direction);
   }
 
   static format(ang) {

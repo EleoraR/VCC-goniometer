@@ -104,7 +104,7 @@ export function createElement() {
   container.append(gonioMeter, canvas, resizeHandle);
 
   attachCanvasListeners(container, canvas, dropdown);
-  attachButtonListeners(canvas, copyButton, resetButton, closeButton, convertDegButton, diffButton, rotateButton, settingsButton);
+  attachButtonListeners(copyButton, resetButton, closeButton, convertDegButton, diffButton, rotateButton, settingsButton);
   activateDrag();
   activateResize();
 }
@@ -139,9 +139,8 @@ function activateResize() {
   }
 }
 
-function attachButtonListeners(canvas, copyButton, resetButton, closeButton, convertDegButton, diffButton, rotateButton, settingsButton) {
+function attachButtonListeners(copyButton, resetButton, closeButton, convertDegButton, diffButton, rotateButton, settingsButton) {
   copyButton.addEventListener('click', (e) => {
-    console.log("copy clickde");
     if (AngleState.angleDeg){
       var copyText = AngleState.format(AngleState.angleDeg);
       copyToClipboard(copyText);
@@ -149,8 +148,7 @@ function attachButtonListeners(canvas, copyButton, resetButton, closeButton, con
   });
 
   resetButton.addEventListener('click', (e) => {
-    points = initializePoints(); 
-    draw();
+    reset();
   });
 
   closeButton.addEventListener('click', (e) => {
@@ -169,16 +167,13 @@ function attachButtonListeners(canvas, copyButton, resetButton, closeButton, con
 
   rotateButton.addEventListener('click', (e) => {
     AngleState.rotate90();
-    const ctx = canvas.getContext('2d');
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    points = initializePoints(); 
     draw();
-    
   });
 
   settingsButton.addEventListener('click', (e) => {
     const cont = document.getElementById("btn-container");
     cont.classList.toggle('open');
-
   });
 
 }
@@ -194,7 +189,6 @@ function attachCanvasListeners(container, canvas, dropdown) {
 
   canvas.addEventListener('mousemove', (e) => {
     if (!selectedPoint ) return;
-    const ctx = canvas.getContext('2d');
     const pos = getMousePos(e, canvas);
     selectedPoint.x = pos.x;
     selectedPoint.y = pos.y;
@@ -239,8 +233,12 @@ function attachCanvasListeners(container, canvas, dropdown) {
 });
 }
 
-function draw() {
+function reset() {
+  points = initializePoints(); 
+  draw();
+}
 
+function draw() {
   if (!points) return;
 
   const stateBtn = document.getElementById('deg-btn');
@@ -249,11 +247,12 @@ function draw() {
   const canvas = document.getElementById('goniometer-canvas');
   const ctx = canvas.getContext('2d');
   const center = getCenter();
-
   const [first, second] = points;
+
   AngleState.first = first;
   AngleState.second = second;
   AngleState.center = center;
+  AngleState.angleDeg = calculateGoniometerAngle(center, first, second);
 
   stateBtn.textContent = AngleState.text();
   acuteAng.textContent = AngleState.format(AngleState.angleDeg);

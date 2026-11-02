@@ -19,6 +19,13 @@ export function calculateGoniometerAngle(center, firstPoint, secondPoint) {
   return angleRad;
 }
 
+export function getPosFromAngle(center, angle, radius) {
+  return {
+    x: center.x + radius * Math.cos(angle),
+    y: center.y + radius * Math.sin(angle)
+  }
+}
+
 export function getMidPoint(first, second) {
   return {
     x: (first.x + second.x)/2,
@@ -61,8 +68,4 @@ export function distBetweenTwoPoints(point1, point2) {
   const dx = point2.x - point1.x;
   const dy = point2.y - point1.y;
   return Math.sqrt(dx * dx + dy * dy);
-}
-
-export function getAcuteAngle(angle) {
-  return angle < Math.PI;
 }

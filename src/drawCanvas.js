@@ -1,4 +1,4 @@
-import {calculateMidPointAngles, getMidPoint, getSectorCenter, calculateGoniometerAngle, MATH} from './mathUtils.js';
+import {calculateMidPointAngles, getMidPoint, getSectorCenter, getPosFromAngle, MATH} from './mathUtils.js';
 import {AngleState} from './angleState.js'
 import { APP_CONSTANTS  } from './clearStyles.js';
 import './styles.css'; 
@@ -88,8 +88,6 @@ export function drawUnitCircle(ctx, color = CONSTANTS.CIRCLE_COLOR)  {
   drawCircleOutline(ctx);
   drawDot(ctx, AngleState.center, CONSTANTS.DOT_RADIUS, color);
   drawPizza(ctx);
-
-  AngleState.angleDeg = calculateGoniometerAngle(center, first, second);
 
   midPointArea(ctx, getMidPoint(center, first), getMidPoint(center, second), AngleState.angleDeg);
   drawPizzaLabels(ctx);
