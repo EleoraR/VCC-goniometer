@@ -2,7 +2,7 @@ import { DRAWER_ID } from "../lib/constants";
 import './styles.css'; 
 import { calculateGoniometerAngle, MATH } from "./mathUtils.js";
 import { drawUnitCircle } from './drawCanvas.js';
-import { copyToClipboard, changeFontSize, initializePoints, diffButtonAction, updateConstants, getCenter, getMousePos, scalePoints } from './helper.js';
+import { copyToClipboard, changeFontSize, initializePoints, diffButtonAction, updateConstants, getCenter, getMousePos, scalePoints, resetAngleText } from './helper.js';
 import {AngleState} from './angleState.js'
 import { DragAndMove } from "./DragAndMove";
 import { Resize } from "./Resize";

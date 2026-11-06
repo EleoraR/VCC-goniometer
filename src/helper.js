@@ -81,9 +81,10 @@ export function resetAngleText() {
   const angle1text = document.getElementById("sub-angle-1");
   const angle2text = document.getElementById("sub-angle-2");
   const angledifftext = document.getElementById("sub-angle-diff");
-  angle1text.textContent = `Angle1: ${AngleState.format(startAngle)}`;
-  angle2text.textContent = `Angle2: ${AngleState.format(endAngle)}`;
-  angledifftext.textContent = `Difference: ${AngleState.format(diff)}`;
+
+  if (startAngle != null) angle1text.textContent = `Angle1: ${AngleState.format(startAngle)}`;
+  if (endAngle != null) angle2text.textContent = `Angle2: ${AngleState.format(endAngle)}`;
+  if (diff != null) angledifftext.textContent = `Difference: ${AngleState.format(diff)}`;
 
 }
 
