@@ -67,6 +67,11 @@ export function createElement() {
   const subtractHeader = document.createElement('div');
   const subtractBody = document.createElement('div');
   const subtractCapture = document.createElement('button');
+  const transparencySliderBtn = document.createElement('button');
+  const transparencyCont = document.createElement('div');
+  const transparencySlider = document.createElement('input');
+  const canvasCont = document.createElement('div');
+  const transparencyLabel = document.createElement('label');
 
   container.classList.add('goniometer-container');
   gonioMeter.classList.add('goniometer-title');
@@ -102,6 +107,9 @@ export function createElement() {
   subtractHeader.id = "subtract-cont-header";
   subtractCapture.id = "subtract-capture";
   subtractBody.id = "subtract-cont-body";
+  transparencyCont.id = "transparency-cont";
+  transparencySlider.id = "transparency-slider";
+  canvasCont.id = "canvas-cont";
 
   diffButton.textContent = "SUBTRACT";
   resetButton.textContent = "RESET";
@@ -112,26 +120,39 @@ export function createElement() {
   angle2Text.textContent = "Angle2: 0.0°";
   anglediffText.textContent = "Difference: 0.0°";
   subtractCapture.textContent = "ANGLE1";
+  transparencySliderBtn.textContent = "TRANSPARENCY";
+
+  transparencySlider.type = "range";
+  transparencySlider.class = "slider";
+  transparencySlider.min = 0;
+  transparencySlider.max = 1;
+  transparencySlider.step = 0.01;
+  transparencySlider.value = 1;
+
+  transparencyLabel.for = "transparency-slider";
+  transparencyLabel.textContent = "Transparency: ";
 
   container.style.width = `${APP_CONSTANTS.WIDTH}px`;
   container.style.height = `${APP_CONSTANTS.HEIGHT}px`;
   canvas.width = `${APP_CONSTANTS.CANVAS_WIDTH}px`;
   canvas.height = `${APP_CONSTANTS.CANVAS_HEIGHT}px`;
 
+  canvasCont.append(canvas);
+  transparencyCont.append(transparencyLabel, transparencySlider);
   angleText.append(acuteAng, obtuseAng);
   subtractHeader.append(subtractCapture, subtractContClose);
   subtractBody.append(angle1Text, angle2Text, anglediffText);
   subtractCont.append(subtractHeader, subtractBody);
-  dropdown.append(settingsButton, buttonCont);
-  buttonCont.append(convertDegButton, copyButton, resetButton, diffButton, rotateButton);
+  dropdown.append(settingsButton);
+  buttonCont.append(convertDegButton, copyButton, resetButton, diffButton, rotateButton, transparencySliderBtn);
   gonioMeter.append(dropdown, angleText, closeButton);
   resizeIcon1.append(resizeIcon2);
   resizeHandle.append(resizeIcon1);
   mainDiv.append(container);
-  container.append(gonioMeter, subtractCont, canvas, resizeHandle);
+  container.append(gonioMeter, buttonCont, subtractCont, transparencyCont, canvasCont, resizeHandle);
 
   attachCanvasListeners(container, canvas, dropdown);
-  attachButtonListeners(copyButton, resetButton, closeButton, convertDegButton, diffButton, rotateButton, settingsButton, subtractContClose, subtractCapture);
+  attachButtonListeners(copyButton, resetButton, closeButton, convertDegButton, diffButton, rotateButton, settingsButton, subtractContClose, subtractCapture, transparencySliderBtn, transparencySlider);
   activateDrag();
   activateResize();
 }
@@ -171,7 +192,7 @@ function isSubtractMode() {
   return subtractCont.classList.contains("subtract");
 }
 
-function attachButtonListeners(copyButton, resetButton, closeButton, convertDegButton, diffButton, rotateButton, settingsButton, subtractContClose, subtractCapture) {
+function attachButtonListeners(copyButton, resetButton, closeButton, convertDegButton, diffButton, rotateButton, settingsButton, subtractContClose, subtractCapture, transparencySliderBtn, transparencySlider) {
   copyButton.addEventListener('click', (e) => {
     if (AngleState.angleDeg){
       var copyText = AngleState.format(AngleState.angleDeg);
@@ -219,6 +240,18 @@ function attachButtonListeners(copyButton, resetButton, closeButton, convertDegB
   subtractCapture.addEventListener('click', (e) => {
     const [first, second] = points;
     diffButtonAction(e, first, second);
+  });
+
+  transparencySliderBtn.addEventListener('click', (e) => {
+    const transparencyCont = document.getElementById("transparency-cont");
+    transparencyCont.classList.toggle("transparency");
+  });
+
+  transparencySlider.addEventListener('input', (e) => {
+    const opacityValue = e.target.value;
+    const targetBox = document.querySelector('#canvas-cont');
+    targetBox.style.opacity = opacityValue;
+
   });
 
 }
