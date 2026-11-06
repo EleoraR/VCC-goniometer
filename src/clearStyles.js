@@ -65,12 +65,16 @@ export function createElement() {
   const subtractContClose = document.createElement('div');
   const subtractContDrag = document.createElement('div');
   const subtractHeader = document.createElement('div');
+  const subtractBody = document.createElement('div');
+  const subtractCapture = document.createElement('button');
 
   container.classList.add('goniometer-container');
   gonioMeter.classList.add('goniometer-title');
   resizeIcon2.classList.add("icon", "icon-link");
   closeButton.classList.add("goniometer-button");
   settingsButton.classList.add("goniometer-button");
+  subtractCapture.classList.add("goniometer-button");
+  subtractContClose.classList.add("goniometer-button");
   angleText.classList.add('goniometer-angles');
 
   gonioMeter.id = "goniometer-handle";
@@ -96,15 +100,18 @@ export function createElement() {
   subtractContClose.id = "sub-close-btn";
   subtractContDrag.id = "sub-cont-handle";
   subtractHeader.id = "subtract-cont-header";
+  subtractCapture.id = "subtract-capture";
+  subtractBody.id = "subtract-cont-body";
 
   diffButton.textContent = "SUBTRACT";
   resetButton.textContent = "RESET";
   rotateButton.textContent = "90°";
   acuteAng.textContent = "0.0";
   obtuseAng.textContent = "0.0";
-  angle1Text.textContent = "Angle1: 0.0";
-  angle2Text.textContent = "Angle2: 0.0";
-  anglediffText.textContent = "Difference: 0.0";
+  angle1Text.textContent = "Angle1: 0.0°";
+  angle2Text.textContent = "Angle2: 0.0°";
+  anglediffText.textContent = "Difference: 0.0°";
+  subtractCapture.textContent = "ANGLE1";
 
   container.style.width = `${APP_CONSTANTS.WIDTH}px`;
   container.style.height = `${APP_CONSTANTS.HEIGHT}px`;
@@ -112,8 +119,9 @@ export function createElement() {
   canvas.height = `${APP_CONSTANTS.CANVAS_HEIGHT}px`;
 
   angleText.append(acuteAng, obtuseAng);
-  subtractHeader.append(subtractContClose);
-  subtractCont.append(subtractHeader, angle1Text, angle2Text, anglediffText);
+  subtractHeader.append(subtractCapture, subtractContClose);
+  subtractBody.append(angle1Text, angle2Text, anglediffText);
+  subtractCont.append(subtractHeader, subtractBody);
   dropdown.append(settingsButton, buttonCont);
   buttonCont.append(convertDegButton, copyButton, resetButton, diffButton, rotateButton);
   gonioMeter.append(dropdown, angleText, closeButton);
@@ -123,7 +131,7 @@ export function createElement() {
   container.append(gonioMeter, subtractCont, canvas, resizeHandle);
 
   attachCanvasListeners(container, canvas, dropdown);
-  attachButtonListeners(copyButton, resetButton, closeButton, convertDegButton, diffButton, rotateButton, settingsButton, subtractContClose);
+  attachButtonListeners(copyButton, resetButton, closeButton, convertDegButton, diffButton, rotateButton, settingsButton, subtractContClose, subtractCapture);
   activateDrag();
   activateResize();
 }
@@ -142,18 +150,10 @@ function activateDrag() {
   const panel = document.querySelector("#goniometer-panel");
   const handle = document.querySelector("#goniometer-handle");
 
-  // const panel2 = document.querySelector("#subtract-cont");
-  // const handle2 = document.querySelector("#subtract-cont-header");
-
   if (panel && handle) {
     const drag = new DragAndMove(handle, panel);
     drag.activate();
   } 
-
-  // if (panel2 && handle2) {
-  //   const drag2 = new DragAndMove(handle2, panel2);
-  //   drag2.activate();
-  // } 
 }
 
 function activateResize() {
@@ -166,7 +166,12 @@ function activateResize() {
   }
 }
 
-function attachButtonListeners(copyButton, resetButton, closeButton, convertDegButton, diffButton, rotateButton, settingsButton, subtractContClose) {
+function isSubtractMode() {
+  const subtractCont = document.getElementById("subtract-cont");
+  return subtractCont.classList.contains("subtract");
+}
+
+function attachButtonListeners(copyButton, resetButton, closeButton, convertDegButton, diffButton, rotateButton, settingsButton, subtractContClose, subtractCapture) {
   copyButton.addEventListener('click', (e) => {
     if (AngleState.angleDeg){
       var copyText = AngleState.format(AngleState.angleDeg);
@@ -185,11 +190,14 @@ function attachButtonListeners(copyButton, resetButton, closeButton, convertDegB
   convertDegButton.addEventListener('click', (e) => {
     AngleState.useDegrees = !AngleState.useDegrees;
     draw();
+    if (isSubtractMode()) {
+      resetAngleText();
+    }
   });
 
   diffButton.addEventListener('click', (e) => {
-    const [first, second] = points;
-    diffButtonAction(e, first, second);
+    const subtractCont = document.getElementById("subtract-cont");
+    subtractCont.classList.toggle("subtract");
   });
 
   rotateButton.addEventListener('click', (e) => {
@@ -206,6 +214,11 @@ function attachButtonListeners(copyButton, resetButton, closeButton, convertDegB
   subtractContClose.addEventListener('click', (e) => {
     const subtractCont = document.getElementById("subtract-cont");
     subtractCont.classList.toggle("subtract");
+  });
+
+  subtractCapture.addEventListener('click', (e) => {
+    const [first, second] = points;
+    diffButtonAction(e, first, second);
   });
 
 }

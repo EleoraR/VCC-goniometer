@@ -5,6 +5,7 @@ import {AngleState} from './angleState.js'
 
 let startAngle = null;
 let endAngle = null;
+let diff = null;
 
 export function copyToClipboard(text) {
   navigator.clipboard.writeText(text);
@@ -50,33 +51,40 @@ export function diffButtonAction(e, first, second) {
   const angle2text = document.getElementById("sub-angle-2");
   const angledifftext = document.getElementById("sub-angle-diff");
   const center = getCenter();
-
   if (startAngle && endAngle) {
- 
     // copyToClipboard(diffButton.textContent); // temp
-    diffButton.textContent = "SUBTRACT";
+    diffButton.textContent = "ANGLE1";
     startAngle = null;
     endAngle = null;
-    angle1text.textContent = "Angle1: 0.0";
-    angle2text.textContent = "Angle2: 0.0";
-    angledifftext.textContent = "Difference: 0.0";
+    angle1text.textContent = "Angle1: 0.0°";
+    angle2text.textContent = "Angle2: 0.0°";
+    angledifftext.textContent = "Difference: 0.0°";
     return;
   }
-
   if (!startAngle) {
     subtractCont.classList.add('subtract');
     startAngle = calculateGoniometerAngle(center, first, second);
-    diffButton.textContent = "EQUALS";
-    angle1text.textContent = `Angle1: ${AngleState.format(startAngle)}`
+    diffButton.textContent = "ANGLE2";
+    angle1text.textContent = `Angle1: ${AngleState.format(startAngle)}`;
 
   } else {
     endAngle = calculateGoniometerAngle(center, first, second);
     // let diff = (startAngle - endAngle) > 0 ? startAngle - endAngle : endAngle - startAngle;
-    let diff = startAngle - endAngle;
-    diffButton.textContent = "AGAIN";
-    angle2text.textContent = `Angle2: ${AngleState.format(endAngle)}`
+    diff = startAngle - endAngle;
+    diffButton.textContent = "RESET";
+    angle2text.textContent = `Angle2: ${AngleState.format(endAngle)}`;
     angledifftext.textContent = `Difference: ${AngleState.format(diff)}`;
   }
+}
+
+export function resetAngleText() {
+  const angle1text = document.getElementById("sub-angle-1");
+  const angle2text = document.getElementById("sub-angle-2");
+  const angledifftext = document.getElementById("sub-angle-diff");
+  angle1text.textContent = `Angle1: ${AngleState.format(startAngle)}`;
+  angle2text.textContent = `Angle2: ${AngleState.format(endAngle)}`;
+  angledifftext.textContent = `Difference: ${AngleState.format(diff)}`;
+
 }
 
 export function updateConstants(width, height) {
